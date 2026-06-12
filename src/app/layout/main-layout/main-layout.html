@@ -1,39 +1,31 @@
 <div class="min-h-screen flex flex-col bg-white text-gray-900">
-    <!-- Header-->
-  <header class="border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 bg-white/90 backdrop-blur-sm z-50">
-    
+  
+  <!-- Header -->
+  <header class="border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 bg-white/90 backdrop-blur-sm z-40">
     <div class="flex items-center gap-4">
-      <!-- Burger Menu -->
-      <button class="p-2 hover:bg-gray-100 rounded-md transition-colors focus:outline-none">
+      <!-- Add Click -->
+      <button (click)="toggleSidebar()" class="p-2 hover:bg-gray-100 rounded-md transition-colors focus:outline-none">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
       </button>
-      
-      <!-- Logo -->
-      <span class="text-xl font-extrabold tracking-tight">WaT Assistant</span>
+      <span class="font-heading text-xl tracking-tight">Work & Travel Board</span>
     </div>
     
-    <!-- Authentication Buttons -->
     <div class="flex items-center gap-4">
-      <button class="font-medium text-gray-600 hover:text-black transition-colors">
-        Sign in
-      </button>
-      <button class="bg-black text-white px-5 py-2.5 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-sm">
-        Register
-      </button>
+      <button class="font-medium text-gray-600 hover:text-black transition-colors">Sign in</button>
+      <button class="bg-black text-white px-5 py-2.5 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-sm">Register</button>
     </div>
-    
   </header>
 
-  <!-- Content Area -->
+  <!-- Main Content -->
   <main class="flex-grow relative">
-    
-
-    <!-- Dynamic Route Container for children -->
     <div class="w-full h-full">
       <router-outlet></router-outlet>
     </div>
-    
   </main>
+
+  <!-- Sidebar Overlay (Dark background) -->
+    <app-sidebar [isOpen]="isSidebarOpen" (close)="toggleSidebar()"></app-sidebar>
+
 </div>
