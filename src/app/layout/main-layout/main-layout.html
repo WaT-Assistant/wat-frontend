@@ -13,8 +13,14 @@
     </div>
     
     <div class="flex items-center gap-4">
-      <button class="font-medium text-gray-600 hover:text-black transition-colors">Sign in</button>
-      <button class="bg-black text-white px-5 py-2.5 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-sm">Register</button>
+      @if (!isAuthPage && !isLoggedIn) {
+    <a routerLink="/login" class="font-medium text-gray-600 hover:text-black transition-colors cursor-pointer">Sign in</a>
+    <a routerLink="/register" class="bg-black text-white px-5 py-2.5 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-sm cursor-pointer">Register</a>
+  }
+
+  @if (isLoggedIn) {
+    <button class="font-medium text-gray-600 hover:text-black transition-colors">Log out</button>
+  }
     </div>
   </header>
 
