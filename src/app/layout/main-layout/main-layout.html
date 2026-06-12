@@ -12,10 +12,22 @@
       <span class="font-heading text-xl tracking-tight">Work & Travel Board</span>
     </div>
     
-    <div class="flex items-center gap-4">
-      <button class="font-medium text-gray-600 hover:text-black transition-colors">Sign in</button>
-      <button class="bg-black text-white px-5 py-2.5 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-sm">Register</button>
-    </div>
+    <div class="flex items-center space-x-4">
+        @if (isLoggedIn$ | async) {
+          <button 
+            (click)="onLogout()" 
+            class="text-sm font-medium bg-black text-white px-5 py-2.5 rounded-xl hover:bg-gray-800 transition-colors shadow-sm">
+            Sign out
+          </button>
+        } @else {
+          <a routerLink="/login" class="text-sm font-medium text-gray-700 hover:text-black transition-colors">
+            Sign in
+          </a>
+          <a routerLink="/register" class="text-sm font-medium bg-black text-white px-5 py-2.5 rounded-xl hover:bg-gray-800 transition-colors shadow-sm">
+            Register
+          </a>
+        }
+      </div>
   </header>
 
   <!-- Main Content -->
