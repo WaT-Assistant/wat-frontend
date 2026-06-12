@@ -1,7 +1,8 @@
 import { Component, inject, ChangeDetectorRef} from '@angular/core';
 import {RouterLink, Router} from '@angular/router';
 import {FormsModule} from '@angular/forms';
-import {Auth} from '../../../core/services/auth';
+import {Auth, RegisterPayload} from '../../../core/services/auth';
+import { RegisterFormData } from '../models/auth';
 
 
 @Component({
@@ -17,10 +18,10 @@ export class RegisterPageComponent {
   router = inject(Router);
   cdr = inject(ChangeDetectorRef);
 
-  formData = {
-    fullname: '',
+  formData: RegisterFormData = {
     email: '',
-    password: ''
+    password: '',
+    fullname:  ''
   };
 
   togglePasswordVisibility() {
@@ -34,8 +35,8 @@ export class RegisterPageComponent {
       return;
     }
 
-    const payload = {
-      fullName: this.formData.fullname,
+    const payload: RegisterPayload = {
+      FullName: this.formData.fullname,
       EmailAddress: this.formData.email,
       Password: this.formData.password
     };
