@@ -44,7 +44,23 @@ export class RegisterPageComponent {
     this.authService.register(payload).subscribe({
       next: (response) => {
         console.log('Registration successful:', response);
-        this.router.navigate(['/login']);
+
+        const loginPayload = {
+          Email: this.formData.email,
+          Password: this.formData.password
+        };
+        
+        this.authService.login(loginPayload).subscribe({
+          next: () => {
+            // Redirect to dashboard or landing page
+            this.router.navigate(['/']);
+          },
+          error: (loginErr) => {
+            console.error('Auto-login failed:', loginErr);
+            // Fallback: send them to login page if auto-login fails
+            this.router.navigate(['/login']);
+          }
+        });
       },
       error: (err) => {
         if (err.status === 400) {

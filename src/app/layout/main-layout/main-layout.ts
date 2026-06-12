@@ -1,27 +1,41 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet, RouterModule, Router, NavigationEnd } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar';
+import { Auth } from '../../core/services/auth';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, SidebarComponent],
+  imports: [RouterOutlet, RouterModule, SidebarComponent, AsyncPipe],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.scss',
 })
 export class MainLayout {
   isSidebarOpen = false;
-  isLoggedIn = false;
   isAuthPage = false;
-  constructor(private router: Router) {
+
+  private authService = inject(Auth);
+  private router = inject(Router);
+
+  // Expose the observable to the HTML template
+  isLoggedIn$ = this.authService.isLoggedIn$;
+
+  
+  constructor() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.isAuthPage = event.url === '/login' || event.url === '/register';
       }
     });
   }
-
+  
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  onLogout() {
+    this.authService.logout();
+    this.router.navigate(['/']); // Redirect to landing after logout
   }
 }
