@@ -3,6 +3,7 @@ import { MainLayout } from './layout/main-layout/main-layout';
 import { Landing } from './features/landing/landing';
 import {LoginPageComponent} from './features/auth/loginpage/loginpage';
 import{RegisterPageComponent} from './features/auth/registerpage/registerpage';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -20,6 +21,11 @@ export const routes: Routes = [
   {
     path: 'register',
     component: RegisterPageComponent
+  },
+  {
+    path: 'dashboard',
+    //component: DashboardComponent,
+    canActivate: [authGuard]
   }
     ]
   },
