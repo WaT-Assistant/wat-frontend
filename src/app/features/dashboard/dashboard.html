@@ -11,7 +11,7 @@
             <p class="text-sm text-gray-500 mt-1">{{ myOffers.length }} positions added</p>
           </div>
           <button class="bg-slate-900 text-white text-sm font-medium px-4 py-2 rounded-xl hover:bg-slate-800 transition-colors shadow-sm flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            <app-icon name="plus" customClass="w-4 h-4"></app-icon>
             Add Offer
           </button>
         </div>
@@ -20,7 +20,7 @@
           <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm relative">
             
             <button class="absolute top-5 right-4 text-gray-400 hover:text-gray-900 transition-colors p-1 rounded-md hover:bg-gray-100">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
+              <app-icon name="dots" customClass="w-5 h-5"></app-icon>
             </button>
 
             <div class="pr-8">
@@ -32,7 +32,7 @@
                   ${{ offer.payPerHour | number:'1.2-2' }}/hr
                 </span>
                 <span class="flex items-center text-sm font-medium text-gray-600">
-                  <svg class="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                  <app-icon name="location" customClass="w-4 h-4 mr-1.5 text-gray-400"></app-icon>
                   {{ offer.placeOfWork }}
                 </span>
                 
@@ -47,10 +47,10 @@
             <details class="group mt-6 pt-5 border-t border-gray-100">
               <summary class="cursor-pointer list-none flex items-center justify-between text-sm font-semibold text-gray-900 hover:text-slate-600 transition-colors">
                 <div class="flex items-center gap-2">
-                  <svg class="w-5 h-5 text-gray-400 group-open:text-slate-900 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                  <app-icon name="document" customClass="w-5 h-5 text-gray-400 group-open:text-slate-900 transition-colors"></app-icon>
                   Important Documents & Info
                 </div>
-                <svg class="w-4 h-4 text-gray-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                <app-icon name="chevron" customClass="w-4 h-4 text-gray-400 transition-transform group-open:rotate-180"></app-icon>
               </summary>
 
               <div class="mt-4 bg-gray-50 rounded-xl p-4 border border-gray-100">

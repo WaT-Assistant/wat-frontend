@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, AsyncPipe } from '@angular/common';
 import { JobOfferService } from '../../core/services/joboffer';
+import { IconComponent } from '../../shared/components/icons/icon.component';
 
 export interface ImportantInfo {
   id?: string;
@@ -31,7 +32,7 @@ export interface MyOffer {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AsyncPipe, IconComponent],
   templateUrl: './dashboard.html'
 })
 export class DashboardComponent {

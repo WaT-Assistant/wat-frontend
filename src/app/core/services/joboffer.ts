@@ -9,10 +9,8 @@ import { MyOffer } from '../../features/dashboard/dashboard';
 export class JobOfferService {
   private http = inject(HttpClient);
   
-  // Replace with your actual .NET local port
   private apiUrl = 'http://localhost:8080/api/JobOffer'; 
 
-  // Fetch user's job offers
   getUserOffers(): Observable<MyOffer[]> {
     return this.http.get<MyOffer[]>(`${this.apiUrl}`);
   }
