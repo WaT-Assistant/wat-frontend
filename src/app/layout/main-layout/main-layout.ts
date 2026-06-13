@@ -3,6 +3,7 @@ import { RouterOutlet, RouterModule, Router, NavigationEnd } from '@angular/rout
 import { SidebarComponent } from '../sidebar/sidebar';
 import { Auth } from '../../core/services/auth';
 import { AsyncPipe } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-main-layout',
