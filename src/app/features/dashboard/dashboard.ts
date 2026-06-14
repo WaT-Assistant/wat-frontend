@@ -10,7 +10,8 @@ export interface ImportantInfo {
   visaAppointment?: Date;
   flight?: Date;
   ds160?: string;
-  ds2019?: string;
+  startOfWork?: Date;
+  endOfWork?: Date;
 }
 
 export interface MyOffer {

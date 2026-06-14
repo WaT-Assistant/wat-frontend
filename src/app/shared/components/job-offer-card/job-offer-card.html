@@ -53,14 +53,20 @@
       </div>
       
       <div>
-        <span class="text-gray-500 block text-xs mb-0.5">DS-2019</span>
-        @if (importantInfo.ds2019) { <span class="font-medium text-gray-900">{{ importantInfo.ds2019 }}</span> }
+        <span class="text-gray-500 block text-xs mb-0.5">Start Of Work</span>
+        @if (importantInfo.startOfWork) { <span class="font-medium text-gray-900">{{ importantInfo.startOfWork }}</span> }
         @else { <span class="text-gray-400 text-sm italic">Not set</span> }
       </div>
       
       <div>
         <span class="text-gray-500 block text-xs mb-0.5">DS-160</span>
         @if (importantInfo.ds160) { <span class="font-medium text-gray-900">{{ importantInfo.ds160 }}</span> }
+        @else { <span class="text-gray-400 text-sm italic">Not set</span> }
+      </div>
+      
+      <div>
+        <span class="text-gray-500 block text-xs mb-0.5">End Of Work</span>
+        @if (importantInfo.endOfWork) { <span class="font-medium text-gray-900">{{ importantInfo.endOfWork }}</span> }
         @else { <span class="text-gray-400 text-sm italic">Not set</span> }
       </div>
       
