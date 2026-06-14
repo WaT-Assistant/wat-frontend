@@ -14,5 +14,4 @@ export class JobOfferService {
   getUserOffers(): Observable<MyOffer[]> {
     return this.http.get<MyOffer[]>(`${this.apiUrl}`);
   }
-
 }
