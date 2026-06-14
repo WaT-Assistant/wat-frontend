@@ -47,29 +47,44 @@ export class JobOfferCardComponent {
   this.isLoadingInfo = true; 
   const formValues = this.infoForm.value;
 
-  const payload: ImportantInfo = {
+  const payload = {
     sevisId: formValues.sevisId,
     ds160: formValues.ds160,
     startOfWork: formValues.startOfWork || null,
     endOfWork: formValues.endOfWork || null,
     visaAppointment: formValues.visaAppointment || null,
-    flightDate: formValues.flightDate || null
+    flightDate: formValues.flightDate || null 
   };
 
-  this.infoService.editImportantInfo(this.offer.id, payload).pipe(
-    finalize(() => {
-      this.isLoadingInfo = false;
-      this.cdr.detectChanges(); 
-    })
-  ).subscribe({
-    next: (savedData) => {
-      this.importantInfo = savedData; 
-      this.isEditingInfo = false; 
-    },
-    error: (err) => {
-      console.error('Error occured while saving', err);
-    }
-  });
+  if (this.importantInfo?.id) {
+    this.infoService.editImportantInfo(this.offer.id, payload).pipe(
+      finalize(() => {
+        this.isLoadingInfo = false;
+        this.cdr.detectChanges(); 
+      })
+    ).subscribe({
+      next: (savedData) => {
+        this.importantInfo = savedData; 
+        this.isEditingInfo = false; 
+      },
+      error: (err) => console.error('Error on updating', err)
+    });
+  } 
+  
+  else {
+    this.infoService.createImportantInfo(this.offer.id, payload).pipe(
+      finalize(() => {
+        this.isLoadingInfo = false;
+        this.cdr.detectChanges(); 
+      })
+    ).subscribe({
+      next: (createdData) => {
+        this.importantInfo = createdData;
+        this.isEditingInfo = false; 
+      },
+      error: (err) => console.error('Error on creating', err)
+    });
+  }
 }
 
   private formatDateForInput(dateString?: string): string {
@@ -114,10 +129,6 @@ export class JobOfferCardComponent {
 
   deleteInfo() {
   if (!this.importantInfo?.id) {
-    return;
-  }
-
-  if (!confirm('Are you sure you want to delete this information?')) {
     return;
   }
 

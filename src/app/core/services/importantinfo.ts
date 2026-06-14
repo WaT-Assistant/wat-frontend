@@ -11,6 +11,10 @@ export class ImportantInfoService {
   
   private apiUrl = 'http://localhost:8080/api/ImportantInfo'; 
 
+  createImportantInfo(offerId: string, payload: any): Observable<ImportantInfo> {
+    return this.http.post<ImportantInfo>(`${this.apiUrl}/${offerId}`, payload);
+  }
+
   editImportantInfo(offerId: string, data: any): Observable<ImportantInfo>{
     return this.http.put<ImportantInfo>(`${this.apiUrl}/${offerId}`, data);
   }
@@ -19,7 +23,7 @@ export class ImportantInfoService {
     return this.http.get<ImportantInfo>(`${this.apiUrl}/${offer_id}`);
   }
 
-  deleteImportantInfo(id: string){
+  deleteImportantInfo(id: string) {
     return this.http.delete<ImportantInfo>(`${this.apiUrl}/${id}`);
   }
 }
