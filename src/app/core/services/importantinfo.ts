@@ -11,7 +11,15 @@ export class ImportantInfoService {
   
   private apiUrl = 'http://localhost:8080/api/ImportantInfo'; 
 
+  editImportantInfo(offerId: string, data: any): Observable<ImportantInfo>{
+    return this.http.put<ImportantInfo>(`${this.apiUrl}/${offerId}`, data);
+  }
+
   getImportantInfoByOfferId(offer_id: string): Observable<ImportantInfo> {
     return this.http.get<ImportantInfo>(`${this.apiUrl}/${offer_id}`);
+  }
+
+  deleteImportantInfo(id: string){
+    return this.http.delete<ImportantInfo>(`${this.apiUrl}/${id}`);
   }
 }

@@ -6,9 +6,9 @@ import { IconComponent } from '../../shared/components/icons/icon.component';
 
 export interface ImportantInfo {
   id?: string;
-  sevisID?: string;
+  sevisId?: string;
   visaAppointment?: Date;
-  flight?: Date;
+  flightDate?: Date;
   ds160?: string;
   startOfWork?: Date;
   endOfWork?: Date;
