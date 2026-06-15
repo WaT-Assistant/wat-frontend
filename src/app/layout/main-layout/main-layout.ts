@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterOutlet, RouterModule, Router, NavigationEnd } from '@angular/router';
+import { RouterOutlet, RouterModule, Router, NavigationEnd, RouterLink } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar';
 import { Auth } from '../../core/services/auth';
 import { AsyncPipe } from '@angular/common';
@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, SidebarComponent, AsyncPipe],
+  imports: [RouterOutlet, RouterModule, SidebarComponent, AsyncPipe, RouterLink],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.scss',
 })
