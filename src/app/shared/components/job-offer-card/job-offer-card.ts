@@ -108,16 +108,18 @@ export class JobOfferCardComponent {
 
   private fetchImportantInfo() {
     this.isLoadingInfo = true;
-    
+    console.log('1) Request working. Turn on loader');
     this.infoService.getImportantInfoByOfferId(this.offer.id).pipe(
       finalize(() => {
+        console.log('3) finalize worked, turn off loader');
         this.isLoadingInfo = false;
         this.hasLoaded = true;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       })
     )
     .subscribe({
       next: (data) => {
+        console.log('2) data fetched to component: ', data);
         this.importantInfo = data;
       },
       error: (err) => {
