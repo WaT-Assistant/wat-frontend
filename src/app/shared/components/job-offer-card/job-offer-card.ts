@@ -145,7 +145,6 @@ export class JobOfferCardComponent {
     },
     error: (err) => {
       console.error('Error occured while deleting', err);
-      // Тут можна додати якийсь тост/алерт з помилкою, якщо є
     }
   });
 }
