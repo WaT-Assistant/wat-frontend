@@ -22,4 +22,8 @@ export class JobOfferService {
   editOffer(offerId: string, data: any): Observable<MyOffer> {
     return this.http.put<MyOffer>(`${this.apiUrl}/${offerId}`, data);
   }
+
+  deleteOffer(offerId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${offerId}`);
+  }
 }

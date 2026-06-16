@@ -17,7 +17,12 @@
     </div>
 
     @for (offer of myOffers; track offer.id) {
-      <app-job-offer-card [offer]="offer"></app-job-offer-card>
+      <app-job-offer-card [offer]="offer"
+        (edit)="openEditModal(offer)" 
+        (delete)="deleteOffer(offer.id)"
+      >
+        
+      </app-job-offer-card>
     } @empty {
       <div class="mt-6 border-2 border-dashed border-gray-200 rounded-2xl p-10 text-center">
         <p class="text-gray-500 font-medium">No offers found. Create your first one!</p>

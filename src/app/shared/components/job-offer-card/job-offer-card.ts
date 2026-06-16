@@ -1,10 +1,12 @@
-import { Component, Input, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, inject, ChangeDetectorRef, EventEmitter, Output, HostListener, ElementRef,
+  ViewChild
+ } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconComponent } from '../icons/icon.component';
 import { ImportantInfoService } from '../../../core/services/importantinfo';
 import { finalize } from 'rxjs';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { ImportantInfo } from '../../../features/dashboard/dashboard';
+import { MyOffer } from '../../../features/dashboard/dashboard';
 
 @Component({
   selector: 'app-job-offer-card',
@@ -14,6 +16,11 @@ import { ImportantInfo } from '../../../features/dashboard/dashboard';
 })
 export class JobOfferCardComponent {
   @Input({ required: true }) offer!: any;
+
+  @Output() edit = new EventEmitter<MyOffer>();
+  @Output() delete = new EventEmitter<string>();
+
+  @ViewChild('menuContainer') menuContainer!: ElementRef;
   
   private infoService = inject(ImportantInfoService); 
   private cdr = inject(ChangeDetectorRef);
@@ -25,6 +32,38 @@ export class JobOfferCardComponent {
   importantInfo: any = null; 
   isLoadingInfo = false;
   hasLoaded = false; 
+  isMenuOpen = false;
+
+  constructor(private eRef: ElementRef) {}
+
+  @HostListener('document:click', ['$event'])
+  clickout(event: Event) {
+    if (this.isMenuOpen && this.menuContainer && 
+      !this.menuContainer.nativeElement.contains(event.target)) {
+      this.isMenuOpen = false;
+    }
+  }
+
+  toggleMenu() {
+    // event.stopPropagation();
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+
+  onEditClick() {
+    // event.stopPropagation();
+    // console.log("Clicked edit");
+    this.isMenuOpen = false;
+    this.edit.emit(this.offer);
+  }
+
+  onDeleteClick() {
+    // event.stopPropagation();
+    // console.log("Clicked delete");
+    this.isMenuOpen = false; 
+    this.delete.emit(this.offer.id);
+  }
+
 
   openEditMode() {
     this.isEditingInfo = true;

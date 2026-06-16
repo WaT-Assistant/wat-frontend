@@ -4,8 +4,7 @@ import { JobOfferService } from '../../core/services/joboffer';
 import { JobOfferCardComponent } from '../../shared/components/job-offer-card/job-offer-card';
 import { IconComponent } from '../../shared/components/icons/icon.component';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { finalize } from 'rxjs';
-import { dateTimestampProvider } from 'rxjs/internal/scheduler/dateTimestampProvider';
+import { finalize, switchMap, BehaviorSubject, tap } from 'rxjs';
 
 export interface ImportantInfo {
   id?: string;
@@ -41,7 +40,11 @@ export interface MyOffer {
 })
 export class DashboardComponent implements OnInit {
   private jobOfferService = inject(JobOfferService);
-  myOffers$ = this.jobOfferService.getUserOffers();
+  private refreshOffers = new BehaviorSubject<void>(undefined);
+  myOffers$ = this.refreshOffers.pipe(
+    switchMap(() => this.jobOfferService.getUserOffers()),
+    tap(() => this.cdr.markForCheck())
+  );
   private cdr = inject(ChangeDetectorRef);
   private fb = inject(FormBuilder);
   selectedOffer: MyOffer | null = null;
@@ -89,15 +92,28 @@ openEditModal(offerToEdit: any) {
     this.isModalOpen = false;
   }
 
+ deleteOffer(id: string) {
+  this.jobOfferService.deleteOffer(id).subscribe({
+    next: () => {
+      this.refreshOffers.next(); 
+      this.cdr.markForCheck(); 
+    },
+    error: (err) => {
+      console.error('Error while deleting:', err);
+    }
+  });
+}
+
   saveOffer() {
   this.errorMessage = null;
 
-  if(this.offerForm.invalid){
+  if (this.offerForm.invalid) {
     this.offerForm.markAllAsTouched();
     this.errorMessage = this.getSpecificErrorMessage();
     return;
   }
-  this.isLoading = true; 
+
+  this.isLoading = true;
   const formValues = this.offerForm.value;
 
   const payload = {
@@ -117,35 +133,36 @@ openEditModal(offerToEdit: any) {
         this.cdr.markForCheck(); 
       })
     ).subscribe({
-      next: (updatedOffer) => {
-        this.selectedOffer = updatedOffer; 
-        this.isModalOpen = false;   
+      next: () => {
+        this.isModalOpen = false;
+        this.selectedOffer = null;
+        this.refreshOffers.next(); 
       },
-      error: (err) => console.error('Error on updating offer', err)
+      error: (err) => {
+        console.error('Failed to update offer:', err);
+        this.errorMessage = 'An error occurred while updating the offer.';
+        this.cdr.markForCheck();
+      }
     });
-  } 
-  
-  else {
+  } else {
     this.jobOfferService.createOffer(payload).pipe(
       finalize(() => {
         this.isLoading = false;
-        this.myOffers$ = this.jobOfferService.getUserOffers();
         this.cdr.markForCheck(); 
       })
     ).subscribe({
-      next: (createdOffer) => {
-        this.selectedOffer = createdOffer;
-        this.myOffers$ = this.jobOfferService.getUserOffers();
+      next: () => {
         this.isModalOpen = false; 
+        this.refreshOffers.next(); 
       },
       error: (err) => {
-        if (err.error && err.error.errors) {
-        const firstErrorKey = Object.keys(err.error.errors)[0];
-        this.errorMessage = err.error.errors[firstErrorKey][0];
-      } else {
-        this.errorMessage = 'Something went wrong on the server.';
-      }
-      this.cdr.markForCheck();
+        if (err.error?.errors) {
+          const firstErrorKey = Object.keys(err.error.errors)[0];
+          this.errorMessage = err.error.errors[firstErrorKey][0];
+        } else {
+          this.errorMessage = 'Something went wrong on the server.';
+        }
+        this.cdr.markForCheck();
       }
     });
   }
