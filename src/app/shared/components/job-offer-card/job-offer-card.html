@@ -21,12 +21,19 @@
       </span>
       
       @if (offer.housingProvided) {
-        <span class="flex items-center text-sm font-medium bg-green-50 text-green-700 px-3 py-1 rounded-lg">
-          Housing Included
-        </span>
+        @if(offer.housingCostPerWeek){
+          <span class="flex items-center text-sm font-medium bg-green-50 text-green-700 px-3 py-1 rounded-lg">
+            Housing Included: ${{ offer.housingCostPerWeek }}/wk
+          </span>
+        }
+        @else{
+          <span class="flex items-center text-sm font-medium bg-green-50 text-green-700 px-3 py-1 rounded-lg">
+            Housing Included: Free
+          </span>
+        }
       }
       @else {
-      <span class="px-3 py-1 text-sm font-medium text-red-700 bg-red-100 rounded-full">
+      <span class="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded-full">
         No Housing
       </span>
       }

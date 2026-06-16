@@ -14,4 +14,12 @@ export class JobOfferService {
   getUserOffers(): Observable<MyOffer[]> {
     return this.http.get<MyOffer[]>(`${this.apiUrl}`);
   }
+
+  createOffer(data: any): Observable<MyOffer> {
+    return this.http.post<MyOffer>(this.apiUrl, data);
+  }
+
+  editOffer(offerId: string, data: any): Observable<MyOffer> {
+    return this.http.put<MyOffer>(`${this.apiUrl}/${offerId}`, data);
+  }
 }
