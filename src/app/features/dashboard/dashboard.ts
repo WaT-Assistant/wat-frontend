@@ -92,14 +92,32 @@ openEditModal(offerToEdit: any) {
     this.isModalOpen = false;
   }
 
- deleteOffer(id: string) {
-  this.jobOfferService.deleteOffer(id).subscribe({
+ isDeleteModalOpen = false;
+offerIdToDelete: string | null = null;
+
+openDeleteModal(id: string) {
+  this.offerIdToDelete = id;
+  this.isDeleteModalOpen = true;
+}
+
+closeDeleteModal() {
+  this.isDeleteModalOpen = false;
+  this.offerIdToDelete = null;
+}
+
+confirmDelete() {
+  if (!this.offerIdToDelete) return;
+
+  this.jobOfferService.deleteOffer(this.offerIdToDelete).subscribe({
     next: () => {
+      console.log('Job offer successfully deleted.');
       this.refreshOffers.next(); 
-      this.cdr.markForCheck(); 
+      this.closeDeleteModal(); 
+      this.cdr.markForCheck();
     },
     error: (err) => {
-      console.error('Error while deleting:', err);
+      console.error('Failed to delete the offer:', err);
+      this.closeDeleteModal();
     }
   });
 }

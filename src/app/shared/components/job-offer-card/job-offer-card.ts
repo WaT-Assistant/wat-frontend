@@ -45,21 +45,16 @@ export class JobOfferCardComponent {
   }
 
   toggleMenu() {
-    // event.stopPropagation();
     this.isMenuOpen = !this.isMenuOpen;
   }
 
 
   onEditClick() {
-    // event.stopPropagation();
-    // console.log("Clicked edit");
     this.isMenuOpen = false;
     this.edit.emit(this.offer);
   }
 
   onDeleteClick() {
-    // event.stopPropagation();
-    // console.log("Clicked delete");
     this.isMenuOpen = false; 
     this.delete.emit(this.offer.id);
   }
@@ -81,6 +76,36 @@ export class JobOfferCardComponent {
   cancelEdit() {
     this.isEditingInfo = false;
   }
+
+isDeleteInfoModalOpen = false;
+documentIdToDelete: string | null = null;
+
+openDeleteInfoModal(id: string) {
+  this.documentIdToDelete = id;
+  this.isDeleteInfoModalOpen = true;
+}
+
+closeDeleteInfoModal() {
+  this.isDeleteInfoModalOpen = false;
+  this.documentIdToDelete = null;
+}
+
+confirmDeleteDoc() {
+  if (!this.documentIdToDelete) return;
+
+  this.infoService.deleteImportantInfo(this.documentIdToDelete).subscribe({
+    next: () => {
+      console.log('Document info successfully deleted.');
+      this.importantInfo = null;
+      this.closeDeleteInfoModal();
+      this.cdr.markForCheck();
+    },
+    error: (err: any) => {
+      console.error('Failed to delete document info: ', err);
+      this.closeDeleteInfoModal();
+    }
+  });
+}
 
   saveInfo() {
   this.isLoadingInfo = true; 
@@ -124,7 +149,7 @@ export class JobOfferCardComponent {
       error: (err) => console.error('Error on creating', err)
     });
   }
-}
+ }
 
   private formatDateForInput(dateString?: string): string {
     if (!dateString) return '';
@@ -166,27 +191,5 @@ export class JobOfferCardComponent {
         this.importantInfo = null;
       }
     });
-  }
-
-  deleteInfo() {
-  if (!this.importantInfo?.id) {
-    return;
-  }
-
-  this.isLoadingInfo = true; 
-
-  this.infoService.deleteImportantInfo(this.importantInfo.id).pipe(
-    finalize(() => {
-      this.isLoadingInfo = false;
-      this.cdr.detectChanges(); 
-    })
-  ).subscribe({
-    next: () => {
-      this.importantInfo = null; 
-    },
-    error: (err) => {
-      console.error('Error occured while deleting', err);
-    }
-  });
-}
+ }
 }
