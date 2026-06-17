@@ -14,12 +14,18 @@ export class NoteComponent {
   @Input({required: true}) note!: Note;
   @Output() delete = new EventEmitter<string>();
   @Output() edit = new EventEmitter<Note>();
+  @Output() view = new EventEmitter<Note>();
+
+  onNoteClick() {
+    this.view.emit(this.note);
+  }
   
   onNoteEdit(){
     this.edit.emit(this.note);
   }
   
-  onNoteDelete() {
+  onNoteDelete(event: Event) {
+    event.stopPropagation();
     this.delete.emit(this.note.id);
   }
 }

@@ -27,8 +27,9 @@ export class NoteBoard implements OnInit{
     '#FFB7B2'  // Pastel Pink
   ];
   selectedColor = this.availableColors[0];
-
+  
   // Reactive data stream
+  selectedNoteToView: Note | null = null;
   private refreshNotes = new BehaviorSubject<void>(undefined);
   notes$ = this.refreshNotes.pipe(
     switchMap(() => this.noteService.getAllNotes()),
@@ -85,5 +86,14 @@ export class NoteBoard implements OnInit{
   editNote(note: Note) {
     // Placeholder for future edit logic
     console.log('Edit clicked for note:', note.id);
+  }
+
+
+  openNoteModal(note: Note) {
+    this.selectedNoteToView = note;
+  }
+
+  closeNoteModal() {
+    this.selectedNoteToView = null;
   }
 }
