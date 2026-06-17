@@ -15,7 +15,7 @@ import { MyOffer } from '../../../features/dashboard/dashboard';
   templateUrl: './job-offer-card.html'
 })
 export class JobOfferCardComponent {
-  @Input({ required: true }) offer!: any;
+  @Input({ required: true }) offer!: MyOffer;
 
   @Output() edit = new EventEmitter<MyOffer>();
   @Output() delete = new EventEmitter<string>();
