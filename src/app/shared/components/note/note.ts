@@ -20,7 +20,8 @@ export class NoteComponent {
     this.view.emit(this.note);
   }
   
-  onNoteEdit(){
+  onNoteEdit(event: Event){
+    event.stopPropagation();
     this.edit.emit(this.note);
   }
   

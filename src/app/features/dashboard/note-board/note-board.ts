@@ -18,6 +18,7 @@ export class NoteBoard implements OnInit{
   private cdr = inject(ChangeDetectorRef);
 
   noteForm!: FormGroup;
+  editForm!: FormGroup;
   
   availableColors = [
     '#FFFF88', // Classic Yellow
@@ -30,6 +31,7 @@ export class NoteBoard implements OnInit{
   
   // Reactive data stream
   selectedNoteToView: Note | null = null;
+  selectedNoteToEdit: Note | null = null;
   private refreshNotes = new BehaviorSubject<void>(undefined);
   notes$ = this.refreshNotes.pipe(
     switchMap(() => this.noteService.getAllNotes()),
@@ -44,6 +46,11 @@ export class NoteBoard implements OnInit{
     this.noteForm = this.fb.group({
       text: ['', [Validators.required, Validators.maxLength(300)]],
       colorHex: [this.selectedColor]
+    });
+
+    this.editForm = this.fb.group({
+      text: ['', [Validators.required, Validators.maxLength(300)]],
+      colorHex: ['']
     });
   }
 
@@ -84,8 +91,32 @@ export class NoteBoard implements OnInit{
   }
 
   editNote(note: Note) {
-    // Placeholder for future edit logic
+    this.selectedNoteToEdit = note;
+    
+    this.editForm.patchValue({
+      text: note.text,
+      colorHex: note.colorHex
+    });
     console.log('Edit clicked for note:', note.id);
+  }
+
+  saveEditedNote() {
+    if (this.editForm.invalid || !this.selectedNoteToEdit) return;
+
+    // Збираємо payload (зверни увагу, що додається id для PUT запиту)
+    const payload = {
+      id: this.selectedNoteToEdit.id,
+      text: this.editForm.value.text.trim(),
+      colorHex: this.editForm.value.colorHex
+    };
+
+    this.noteService.updateNote(payload.id, payload).subscribe({
+      next: () => {
+        this.closeNoteModal();
+        this.refreshNotes.next();
+      },
+      error: (err) => console.error('Error updating note:', err)
+    });
   }
 
 
@@ -95,5 +126,9 @@ export class NoteBoard implements OnInit{
 
   closeNoteModal() {
     this.selectedNoteToView = null;
+  }
+
+  closeEditNoteModal(){
+    this.selectedNoteToEdit = null;
   }
 }
