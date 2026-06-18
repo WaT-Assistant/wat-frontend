@@ -1,21 +1,26 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef, ViewChild, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BehaviorSubject, switchMap, tap } from 'rxjs';
 import { NoteComponent } from '../../../shared/components/note/note';
+import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal';
 import { NoteService } from '../../../core/services/note';
 import { Note } from '../../../core/services/note';
 
 @Component({
   selector: 'app-note-board',
-  imports: [CommonModule, ReactiveFormsModule, NoteComponent],  
+  imports: [CommonModule, ReactiveFormsModule, NoteComponent, ConfirmationModalComponent],  
   templateUrl: './note-board.html',
   styleUrl: './note-board.scss',
 })
 export class NoteBoard implements OnInit{
+  @ViewChild(ConfirmationModalComponent) deleteModal!: ConfirmationModalComponent;
+  
   private noteService = inject(NoteService);
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
+  
+  noteIdToDelete = signal<string | null>(null);
 
   noteForm!: FormGroup;
   editForm!: FormGroup;
@@ -79,8 +84,17 @@ export class NoteBoard implements OnInit{
   }
 
   deleteNote(id: string) {
+    this.noteIdToDelete.set(id);
+    this.deleteModal.open();
+  }
+
+  confirmDelete() {
+    const id = this.noteIdToDelete();
+    if (!id) return;
+
     this.noteService.deleteNote(id).subscribe({
       next: () => {
+        this.noteIdToDelete.set(null);
         this.refreshNotes.next();
       },
       error: (err) => console.error('Error deleting note:', err)

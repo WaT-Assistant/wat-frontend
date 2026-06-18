@@ -148,3 +148,12 @@
     </div>
   </div>
 }
+
+<app-confirmation-modal 
+  title="Delete Note"
+  message="Are you sure you want to delete this note? This action cannot be undone."
+  confirmText="Delete"
+  cancelText="Cancel"
+  (confirmed)="confirmDelete()"
+  (cancelled)="noteIdToDelete.set(null)">
+</app-confirmation-modal>
