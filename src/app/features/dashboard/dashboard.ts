@@ -6,6 +6,8 @@ import { IconComponent } from '../../shared/components/icons/icon.component';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { finalize, switchMap, BehaviorSubject, tap } from 'rxjs';
 import { NoteBoard } from './note-board/note-board';
+import { EditOfferModalComponent } from './modals/edit-offer-modal/edit-offer-modal';
+import { DeleteOfferModalComponent } from './modals/delete-offer-modal/delete-offer-modal';
 
 export interface ImportantInfo {
   id?: string;
@@ -36,7 +38,7 @@ export interface MyOffer {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, AsyncPipe, JobOfferCardComponent, IconComponent, ReactiveFormsModule, NoteBoard],
+  imports: [CommonModule, AsyncPipe, JobOfferCardComponent, IconComponent, ReactiveFormsModule, NoteBoard, EditOfferModalComponent, DeleteOfferModalComponent],
   templateUrl: './dashboard.html'
 })
 export class DashboardComponent implements OnInit {
@@ -53,6 +55,8 @@ export class DashboardComponent implements OnInit {
   isModalOpen = false;
   isLoading = false;
   errorMessage: string | null = null;
+  isDeleteModalOpen = false;
+  offerIdToDelete: string | null = null;
   
   offerForm!: FormGroup;
 
@@ -93,8 +97,6 @@ openEditModal(offerToEdit: any) {
     this.isModalOpen = false;
   }
 
- isDeleteModalOpen = false;
-offerIdToDelete: string | null = null;
 
 openDeleteModal(id: string) {
   this.offerIdToDelete = id;
@@ -187,31 +189,25 @@ confirmDelete() {
   }
 }
 
-isFieldInvalid(fieldName: string): boolean {
-  const control = this.offerForm.get(fieldName);
-  return !!(control && control.invalid && control.touched);
-}
+  private getSpecificErrorMessage(): string {
+    const controls = this.offerForm.controls;
 
-private getSpecificErrorMessage(): string {
-  const controls = this.offerForm.controls;
+    if (controls['position']?.hasError('required')) return 'Please enter the position title.';
+    if (controls['employer']?.hasError('required')) return 'Please enter the employer name.';
+    if (controls['placeOfWork']?.hasError('required')) return 'Please specify the location.';
 
-  if (controls['position']?.hasError('required')) return 'Please enter the position title.';
-  if (controls['employer']?.hasError('required')) return 'Please enter the employer name.';
-  if (controls['placeOfWork']?.hasError('required')) return 'Please specify the location.';
+    if (controls['payPerHour']?.hasError('required')) return 'Pay per hour is required.';
+    if (controls['payPerHour']?.hasError('min')) return 'Pay per hour must be greater than $0.';
 
-  if (controls['payPerHour']?.hasError('required')) return 'Pay per hour is required.';
-  if (controls['payPerHour']?.hasError('min')) return 'Pay per hour must be greater than $0.';
+    if (controls['year']?.hasError('required')) return 'Year is required.';
+    if (controls['year']?.hasError('min')) return 'Year cannot be earlier than 2020.';
+    if (controls['year']?.hasError('max')) {
+      const maxYear = new Date().getFullYear() + 1;
+      return `Year cannot be later than ${maxYear}.`;
+    }
 
-  if (controls['year']?.hasError('required')) return 'Year is required.';
-  if (controls['year']?.hasError('min')) return 'Year cannot be earlier than 2020.';
-  if (controls['year']?.hasError('max')) {
-    const maxYear = new Date().getFullYear() + 1;
-    return `Year cannot be later than ${maxYear}.`;
+    if (controls['housingCostPerWeek']?.hasError('min')) return 'Housing cost cannot be negative.';
+
+    return 'Please check the highlighted fields.';
   }
-
-  if (controls['housingCostPerWeek']?.hasError('min')) return 'Housing cost cannot be negative.';
-
-  return 'Please check the highlighted fields.';
-}
-
 }
