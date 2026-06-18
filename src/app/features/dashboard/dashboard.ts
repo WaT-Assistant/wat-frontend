@@ -5,6 +5,7 @@ import { JobOfferCardComponent } from '../../shared/components/job-offer-card/jo
 import { IconComponent } from '../../shared/components/icons/icon.component';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { finalize, switchMap, BehaviorSubject, tap } from 'rxjs';
+import { NoteBoard } from './note-board/note-board';
 
 export interface ImportantInfo {
   id?: string;
@@ -35,7 +36,7 @@ export interface MyOffer {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, AsyncPipe, JobOfferCardComponent, IconComponent, ReactiveFormsModule],
+  imports: [CommonModule, AsyncPipe, JobOfferCardComponent, IconComponent, ReactiveFormsModule, NoteBoard],
   templateUrl: './dashboard.html'
 })
 export class DashboardComponent implements OnInit {
