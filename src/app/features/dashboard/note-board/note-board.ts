@@ -79,9 +79,6 @@ export class NoteBoard implements OnInit{
   }
 
   deleteNote(id: string) {
-    const confirmed = confirm('Are you sure you want to delete this note?');
-    if (!confirmed) return;
-
     this.noteService.deleteNote(id).subscribe({
       next: () => {
         this.refreshNotes.next();
@@ -103,7 +100,6 @@ export class NoteBoard implements OnInit{
   saveEditedNote() {
     if (this.editForm.invalid || !this.selectedNoteToEdit) return;
 
-    // Збираємо payload (зверни увагу, що додається id для PUT запиту)
     const payload = {
       id: this.selectedNoteToEdit.id,
       text: this.editForm.value.text.trim(),
@@ -112,7 +108,7 @@ export class NoteBoard implements OnInit{
 
     this.noteService.updateNote(payload.id, payload).subscribe({
       next: () => {
-        this.closeNoteModal();
+        this.closeEditNoteModal();
         this.refreshNotes.next();
       },
       error: (err) => console.error('Error updating note:', err)
