@@ -4,12 +4,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { BehaviorSubject, switchMap, tap } from 'rxjs';
 import { NoteComponent } from '../../../shared/components/note/note';
 import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal';
+import { ViewNoteModalComponent } from './modals/view-note-modal/view-note-modal';
+import { EditNoteModalComponent } from './modals/edit-note-modal/edit-note-modal';
 import { NoteService } from '../../../core/services/note';
 import { Note } from '../../../core/services/note';
 
 @Component({
   selector: 'app-note-board',
-  imports: [CommonModule, ReactiveFormsModule, NoteComponent, ConfirmationModalComponent],  
+  imports: [CommonModule, ReactiveFormsModule, NoteComponent, ConfirmationModalComponent, ViewNoteModalComponent, EditNoteModalComponent],  
   templateUrl: './note-board.html',
   styleUrl: './note-board.scss',
 })
