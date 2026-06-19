@@ -21,30 +21,36 @@ export class Auth {
   
   private apiUrl = 'http://localhost:8080/api/Auth';
 
-  private currentUserSubject = new BehaviorSubject<boolean>(this.hasToken());
+  private currentUserSubject = new BehaviorSubject<boolean>(this.isAuthenticated());
   public isLoggedIn$ = this.currentUserSubject.asObservable();
 
-  private hasToken(): boolean{
-    return !!localStorage.getItem('token');
+  private isAuthenticated(): boolean{
+    return localStorage.getItem("isLoggedIn") == 'true';
   }
 
   login(credentials: LoginPayload): Observable<any> {
-    return this.http.post(`${this.apiUrl}/Login`, credentials).pipe(
-      tap((response: any) => {
-        if(response && response.token){
-          localStorage.setItem('token', response.token);
-          this.currentUserSubject.next(true);
-        }
+    return this.http.post(`${this.apiUrl}/Login`, credentials, {
+      withCredentials: true
+    })
+    .pipe(
+      tap(() => {
+        localStorage.setItem('isLoggedIn', 'true');
+        this.currentUserSubject.next(true);
       })
-    )
+    );
   }
 
   register(userData: RegisterPayload): Observable<any> {
     return this.http.post(`${this.apiUrl}/Register`, userData);
   }
 
-  logout(): void {
-    localStorage.removeItem('token');
-    this.currentUserSubject.next(false); // Notify app that user is logged out
+  logout(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Logout`, {}, {withCredentials: true})
+    .pipe(
+      tap(() => {
+        localStorage.removeItem('isLoggedIn');
+        this.currentUserSubject.next(false); // Notify app that user is logged out
+      }) 
+    );
   }
 }

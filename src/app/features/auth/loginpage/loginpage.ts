@@ -46,9 +46,6 @@ export class LoginPageComponent {
     this.authService.login(payload).subscribe({
       next: (response) => {
         console.log('Login successful:', response);
-        
-        // TODO: Save token here later (localStorage / AuthService)
-        // Redirect user to the main page or dashboard
         this.router.navigate(['/']);
       },
       error: (err) => {

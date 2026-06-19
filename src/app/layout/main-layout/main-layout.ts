@@ -36,7 +36,13 @@ export class MainLayout {
   }
 
   onLogout() {
-    this.authService.logout();
-    this.router.navigate(['/']); // Redirect to landing after logout
+    this.authService.logout().subscribe({
+    next: () => {
+      this.router.navigate(['/']);// Redirect to landing after logout
+    },
+    error: (err) => {
+      console.error('Error on sign out', err);
+    }
+  }); 
   }
 }
