@@ -1,0 +1,60 @@
+<div class="max-w-7xl mx-auto px-6 py-10">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+    
+    <div class="lg:col-span-7 flex flex-col gap-6">
+      
+      @if (myOffers$ | async; as myOffers) {
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Job Offers</h1>
+            <p class="text-sm text-gray-500 mt-1">{{ myOffers.length }} positions added</p>
+          </div>
+          <button (click)="openAddModal()" class="bg-slate-900 text-white text-sm font-medium px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-slate-800 transition-colors shadow-sm">
+            <app-icon name="plus" customClass="w-5 h-5"></app-icon>
+              Add Offer
+          </button>
+        </div>
+
+        @for (offer of myOffers; track offer.id) {
+          <app-job-offer-card [offer]="offer"
+            (edit)="openEditModal(offer)" 
+            (delete)="openDeleteModal(offer.id)"
+          >
+            
+          </app-job-offer-card>
+        } @empty {
+          <div class="mt-6 border-2 border-dashed border-gray-200 rounded-2xl p-10 text-center">
+            <p class="text-gray-500 font-medium">No offers found. Create your first one!</p>
+          </div>
+        }
+
+      } @else {
+        <div class="flex items-center justify-center p-20 text-gray-400 font-medium">
+          Loading offers...
+        </div>
+      }
+    </div>
+
+    <div class="lg:col-span-5">
+      <app-note-board class="block h-full"></app-note-board>
+    </div>
+
+  </div>
+</div>
+
+<app-edit-offer-modal 
+  [isOpen]="isModalOpen"
+  [selectedOffer]="selectedOffer"
+  [offerForm]="offerForm"
+  [isLoading]="isLoading"
+  [errorMessage]="errorMessage"
+  (save)="saveOffer()"
+  (close)="closeModal()">
+</app-edit-offer-modal>
+
+<app-delete-offer-modal 
+  [isOpen]="isDeleteModalOpen"
+  (confirm)="confirmDelete()"
+  (close)="closeDeleteModal()">
+</app-delete-offer-modal>

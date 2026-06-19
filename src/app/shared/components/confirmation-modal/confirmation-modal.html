@@ -1,0 +1,30 @@
+@if (isOpen()) {
+  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-lg p-6 max-w-sm w-full mx-4">
+      
+      <div class="flex items-center gap-4 mb-4">
+        <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-red-100 rounded-full">
+          <app-icon name="warning"></app-icon>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900">{{ title }}</h3>
+      </div>
+
+      <p class="text-sm text-gray-600 mb-6 ml-14">{{ message }}</p>
+      
+      <div class="flex gap-3 justify-end">
+        <button 
+          type="button"
+          (click)="cancel()"
+          class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+          {{ cancelText }}
+        </button>
+        <button 
+          type="button"
+          (click)="confirm()"
+          class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors">
+          {{ confirmText }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

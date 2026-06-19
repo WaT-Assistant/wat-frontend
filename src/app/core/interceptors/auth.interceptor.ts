@@ -9,12 +9,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) =>{
     const router = inject(Router);
 
     const token = localStorage.getItem('token');
-
     let clonReq = req;
     if(token){
         clonReq = req.clone({
             setHeaders: {
-                Authorization: 'Bearer ${token}'
+                Authorization: `Bearer ${token}`
             }
         });
     }
