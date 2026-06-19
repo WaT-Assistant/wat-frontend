@@ -1,0 +1,54 @@
+@if (isOpen) {
+  <form [formGroup]="infoForm" (ngSubmit)="onSave()" class="animate-fade-in mt-2">
+    <div class="grid grid-cols-2 gap-y-4 gap-x-4 text-sm">
+      
+      <div>
+        <label class="text-gray-500 block text-xs mb-1">SEVIS ID</label>
+        <input type="text" formControlName="sevisId" placeholder="N00..." 
+               class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-900 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none transition-shadow">
+      </div>
+
+      <div>
+        <label class="text-gray-500 block text-xs mb-1">Start Of Work</label>
+        <input type="date" formControlName="startOfWork" 
+               class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-900 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none transition-shadow">
+      </div>
+      
+      <div>
+        <label class="text-gray-500 block text-xs mb-1">DS-160</label>
+        <input type="text" formControlName="ds160" placeholder="Your DS160 Confirmation..." 
+               class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-900 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none transition-shadow">
+      </div>
+
+      <div>
+        <label class="text-gray-500 block text-xs mb-1">End Of Work</label>
+        <input type="date" formControlName="endOfWork" 
+               class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-900 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none transition-shadow">
+      </div>
+
+      <div>
+        <label class="text-gray-500 block text-xs mb-1">Visa Appointment</label>
+        <input type="date" formControlName="visaAppointment" 
+               class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-900 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none transition-shadow">
+      </div>
+
+      <div>
+        <label class="text-gray-500 block text-xs mb-1">Flight</label>
+        <input type="date" formControlName="flightDate" 
+               class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-900 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 outline-none transition-shadow">
+      </div>
+
+    </div>
+
+    <div class="mt-6 flex items-center justify-end gap-3">
+      <button type="button" (click)="onCancel()" 
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+        Cancel
+      </button>
+      <button type="submit" 
+              class="px-4 py-2 text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition-colors shadow-sm">
+        Save
+      </button>
+    </div>
+  </form>
+}

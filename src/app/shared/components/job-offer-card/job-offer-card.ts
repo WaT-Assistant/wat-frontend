@@ -3,6 +3,8 @@ import { Component, Input, inject, ChangeDetectorRef, EventEmitter, Output, Host
  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconComponent } from '../icons/icon.component';
+import { EditInfoModalComponent } from './modals/edit-info-modal/edit-info-modal';
+import { DeleteInfoModalComponent } from './modals/delete-info-modal/delete-info-modal';
 import { ImportantInfoService } from '../../../core/services/importantinfo';
 import { finalize } from 'rxjs';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -11,7 +13,7 @@ import { MyOffer } from '../../../features/dashboard/dashboard';
 @Component({
   selector: 'app-job-offer-card',
   standalone: true,
-  imports: [CommonModule, IconComponent, ReactiveFormsModule],
+  imports: [CommonModule, IconComponent, ReactiveFormsModule, EditInfoModalComponent, DeleteInfoModalComponent],
   templateUrl: './job-offer-card.html'
 })
 export class JobOfferCardComponent {
@@ -33,6 +35,8 @@ export class JobOfferCardComponent {
   isLoadingInfo = false;
   hasLoaded = false; 
   isMenuOpen = false;
+  isDeleteInfoModalOpen = false;
+  documentIdToDelete: string | null = null;
 
   constructor(private eRef: ElementRef) {}
 
@@ -76,9 +80,6 @@ export class JobOfferCardComponent {
   cancelEdit() {
     this.isEditingInfo = false;
   }
-
-isDeleteInfoModalOpen = false;
-documentIdToDelete: string | null = null;
 
 openDeleteInfoModal(id: string) {
   this.documentIdToDelete = id;
