@@ -1,5 +1,5 @@
 import { Component, inject, ChangeDetectorRef } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Auth, LoginPayload } from '../../../core/services/auth';
 import { LoginFormData } from '../models/auth';
@@ -13,12 +13,12 @@ import { LoginFormData } from '../models/auth';
 export class LoginPageComponent {
   private authService = inject(Auth);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
 
   showPassword = false;
   errorMessage = '';
 
-  // Form data model for login
   formData: LoginFormData = {
     email: '',
     password: ''
@@ -37,7 +37,6 @@ export class LoginPageComponent {
       return;
     }
 
-    // Map frontend fields to match your .NET LoginDTO
     const payload: LoginPayload = {
       Email: this.formData.email,
       Password: this.formData.password
@@ -46,7 +45,8 @@ export class LoginPageComponent {
     this.authService.login(payload).subscribe({
       next: (response) => {
         console.log('Login successful:', response);
-        this.router.navigate(['/']);
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        this.router.navigate([returnUrl]);
       },
       error: (err) => {
         if (err.status === 401) {
