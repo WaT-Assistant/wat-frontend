@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, inject, ChangeDetectorRef } from '@angular/core';
 import { PublicOfferCard } from './components/public-offer-card/public-offer-card';
 import { JobOfferService } from '../../core/services/joboffer';
 
@@ -24,6 +24,7 @@ export interface PublicOffer{
 })
 export class PublicOffersPage implements OnInit, AfterViewInit {
   private offerService = inject(JobOfferService);
+  private cdr = inject(ChangeDetectorRef);
 
   publicOffers: PublicOffer[] = [];
   currentPage = 1;
@@ -45,17 +46,22 @@ export class PublicOffersPage implements OnInit, AfterViewInit {
     if (this.isLoading || !this.hasMoreOffers) return;
 
     this.isLoading = true;
+    this.cdr.detectChanges();
 
     this.offerService.getPublicOffers(this.currentPage, this.pageSize).subscribe({
       next: (offers) => {
-        this.publicOffers = [...this.publicOffers, ...offers];
+        const safeOffers = offers || []; 
         
-        if (offers.length < this.pageSize) {
+        this.publicOffers = [...this.publicOffers, ...safeOffers];
+        
+        if (safeOffers.length < this.pageSize) {
           this.hasMoreOffers = false;
         }
         
         this.currentPage++;
         this.isLoading = false;
+        this.cdr.detectChanges();
+
       },
       error: (err) => {
         console.error('Error loading offers', err);
@@ -73,7 +79,7 @@ export class PublicOffersPage implements OnInit, AfterViewInit {
 
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !this.isLoading) {
-        this.loadOffers();
+          this.loadOffers();
       }
     }, options);
 
