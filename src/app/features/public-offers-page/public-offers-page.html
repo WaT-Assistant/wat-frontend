@@ -1,23 +1,23 @@
-<div class="offers-container">
-  <h2>Available offers</h2>
+<div class="max-w-7xl mx-auto p-5">
+  <h2 class="text-2xl font-bold mb-6 text-gray-900">Available offers</h2>
 
-  <div class="grid">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
     @for (offer of publicOffers; track offer.id) {
       <app-public-offer-card [offer]="offer"></app-public-offer-card>
     }
   </div>
 
-  <div #scrollAnchor class="scroll-anchor">
-    
+  <div #scrollAnchor class="text-center mt-8 text-gray-500 pb-8">
     @if (isLoading) {
-      <p>Loading offers...</p> } 
+      <p>Loading offers...</p>
+    } 
     
     @if (!hasMoreOffers && publicOffers.length > 0) {
-      <p class="end-message">You viewed all available offers at the moment.</p>
+      <p>You viewed all available offers at the moment.</p>
     }
     
     @if (!hasMoreOffers && publicOffers.length === 0) {
-      <p class="end-message">No published offers right now.</p>
+      <p>No published offers right now.</p>
     }
   </div>
 </div>
