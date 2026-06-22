@@ -28,7 +28,7 @@ export class PublicOffersPage implements OnInit, AfterViewInit {
 
   publicOffers: PublicOffer[] = [];
   currentPage = 1;
-  pageSize = 10;
+  pageSize = 12;
   isLoading = false;
   hasMoreOffers = true;
 
