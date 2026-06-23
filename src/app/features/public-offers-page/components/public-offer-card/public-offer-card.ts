@@ -11,4 +11,5 @@ import { DecimalPipe } from '@angular/common';
 })
 export class PublicOfferCard {
   @Input({ required: true }) offer!: PublicOffer;
+  isFeedbackExpanded: boolean = false;
 }

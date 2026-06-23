@@ -2,23 +2,26 @@
   
   <div class="flex justify-between items-start mb-4 gap-4">
     <h3 class="text-lg font-semibold text-gray-900 leading-tight m-0">{{ offer.position }}</h3>
-      
+    @if(offer.rating) {
+      <div class="flex items-center gap-0.5">
+        @for (star of [1, 2, 3, 4, 5]; track star) {
+        <app-icon 
+          name="star" 
+          [customClass]="star <= offer.rating ? 'w-5 h-5 text-yellow-400' : 'w-5 h-5 text-gray-200'">
+        </app-icon>
+      }
+      </div>
+    }
   </div>
-
   
   <div class="flex flex-col gap-3 mb-6 text-gray-600 text-sm flex-grow">
     <div class="flex items-center gap-2">
-      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-      </svg>
+      <app-icon name="building"></app-icon>
       <span>{{ offer.employer }}</span>
     </div>
     
     <div class="flex items-center gap-2">
-      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z"></path>
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-      </svg>
+      <app-icon name="location" customClass="w-4 h-4 text-gray-400"></app-icon>
       <span>{{ offer.placeOfWork }}</span>
     </div>
 
@@ -29,27 +32,49 @@
       
       @if (offer.housingProvided) {
         @if(offer.housingCostPerWeek){
-          <span class="flex items-center text-sm font-medium bg-green-50 text-green-700 px-3 py-1 rounded-lg">
+          <span class="flex items-center text-sm font-medium gap-2 bg-green-50 text-green-700 px-3 py-1 rounded-lg">
+            <app-icon name="home"></app-icon>
             Housing Included: ${{ offer.housingCostPerWeek }}/wk
           </span>
         }
         @else{
-          <span class="flex items-center text-sm font-medium bg-green-50 text-green-700 px-3 py-1 rounded-lg">
+          <span class="flex items-center text-sm font-medium gap-2 bg-green-50 text-green-700 px-3 py-1 rounded-lg">
+            <app-icon name="home"></app-icon>
             Housing Included: Free
           </span>
         }
       }
       @else {
-      <span class="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded-full">
+      <span class="flex items-center px-3 py-1 text-sm font-medium gap-2 text-gray-700 bg-gray-100 rounded-full">
+        <app-icon name="home"></app-icon>
         No Housing
       </span>
       }
     </div>
   </div>
 
-  <div class="mt-auto">
-    <button class="w-full py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg font-medium transition-colors">
-      View Details
-    </button>
-  </div>
+  @if (offer.feedback) {
+    <div class="mt-4 pt-4 border-t border-gray-100">
+      <div class="flex items-start gap-2">
+        <svg class="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 32 32">
+          <path d="M10 8c-3.3 0-6 2.7-6 6v10h10V14H8.4c.4-1.9 2.1-3.5 4.1-3.8V8zm14 0c-3.3 0-6 2.7-6 6v10h10V14h-5.6c.4-1.9 2.1-3.5 4.1-3.8V8z"/>
+        </svg>
+        
+        <div class="min-w-0 flex-grow">
+          <p class="text-sm text-gray-500 italic leading-snug break-words transition-all duration-300"
+             [class.line-clamp-3]="!isFeedbackExpanded">
+            "{{ offer.feedback }}"
+          </p>
+          
+          @if (offer.feedback.length > 80) {
+            <button 
+              (click)="isFeedbackExpanded = !isFeedbackExpanded"
+              class="text-xs font-semibold text-blue-600 hover:text-blue-800 mt-1 cursor-pointer">
+              {{ isFeedbackExpanded ? 'Show less' : 'Read more...' }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  }
 </div>
