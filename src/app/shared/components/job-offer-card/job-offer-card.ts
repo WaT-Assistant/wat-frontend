@@ -21,6 +21,8 @@ export class JobOfferCardComponent {
 
   @Output() edit = new EventEmitter<MyOffer>();
   @Output() delete = new EventEmitter<string>();
+  @Output() publish = new EventEmitter<MyOffer>();
+  @Output() unpublish = new EventEmitter<MyOffer>();
 
   @ViewChild('menuContainer') menuContainer!: ElementRef;
   
@@ -109,8 +111,11 @@ confirmDeleteDoc() {
 }
 
   togglePublish(){
-    
-    this.offer.isPublished = !this.offer.isPublished;
+    if(!this.offer.isPublished)
+      this.publish.emit(this.offer);
+    else{
+      this.unpublish.emit(this.offer);
+    }
   }
 
   saveInfo() {

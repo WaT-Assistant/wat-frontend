@@ -29,7 +29,7 @@ export interface MyOffer {
   housingCostPerWeek: number;
   year: number;
   isPublished: boolean;
-  
+  feedback?: string | null;
   rating?: number | null;   
   
   importantInfo?: ImportantInfo; 
@@ -57,8 +57,12 @@ export class DashboardComponent implements OnInit {
   errorMessage: string | null = null;
   isDeleteModalOpen = false;
   offerIdToDelete: string | null = null;
+
+  isPublishModalOpen = false;
+  offerToPublish: MyOffer | null = null;
   
   offerForm!: FormGroup;
+  publishForm!: FormGroup;
 
   ngOnInit() {
     this.initForm();
@@ -77,6 +81,11 @@ export class DashboardComponent implements OnInit {
       ],
       housingProvided: [false],
       housingCostPerWeek: [null]
+    });
+
+    this.publishForm = this.fb.group({
+      rating: [5, [Validators.required, Validators.min(1), Validators.max(5)]],
+      feedback: ['']
     });
   }
 
@@ -188,6 +197,58 @@ confirmDelete() {
     });
   }
 
+}
+
+openPublishModal(offer: MyOffer) {
+  this.offerToPublish = offer;
+  this.publishForm.reset({ rating: 5, feedback: '' }); 
+  this.isPublishModalOpen = true;
+}
+
+closePublishModal() {
+  this.isPublishModalOpen = false;
+  this.offerToPublish = null;
+}
+
+setRating(stars: number) {
+  this.publishForm.patchValue({ rating: stars });
+}
+
+confirmPublish() {
+  if (!this.offerToPublish || this.publishForm.invalid) return;
+
+  this.isLoading = true;
+  const payload = this.publishForm.value;
+
+  this.jobOfferService.publishOffer(this.offerToPublish.id, payload).pipe(
+    finalize(() => {
+      this.isLoading = false;
+      this.cdr.markForCheck();
+    })
+  ).subscribe({
+    next: () => {
+      console.log('Job offer successfully published.');
+      this.refreshOffers.next();
+      this.closePublishModal();
+    },
+    error: (err) => {
+      console.error('Failed to publish the offer:', err);
+      this.closePublishModal();
+    }
+  });
+}
+
+onUnpublish(offer: MyOffer) {
+  this.jobOfferService.unpublishOffer(offer.id).subscribe({
+    next: () => {
+      console.log('Job offer successfully unpublished.');
+      this.refreshOffers.next();
+      this.cdr.markForCheck();
+    },
+    error: (err) => {
+      console.error('Failed to unpublish the offer:', err);
+    }
+  });
 }
 
   private getSpecificErrorMessage(): string {
