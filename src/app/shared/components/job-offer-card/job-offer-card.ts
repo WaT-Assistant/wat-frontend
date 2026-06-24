@@ -108,6 +108,11 @@ confirmDeleteDoc() {
   });
 }
 
+  togglePublish(){
+    
+    this.offer.isPublished = !this.offer.isPublished;
+  }
+
   saveInfo() {
   this.isLoadingInfo = true; 
   const formValues = this.infoForm.value;
