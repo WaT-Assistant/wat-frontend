@@ -32,9 +32,14 @@ export class DashboardComponent implements OnInit {
   private currentYear = new Date().getFullYear();
   isModalOpen = false;
   isLoading = false;
+
   errorMessage: string | null = null;
   isDeleteModalOpen = false;
   offerIdToDelete: string | null = null;
+
+  isUndoToastVisible = false;
+  lastUnpublishedOffer: MyOffer | null = null;
+  private toastTimeout: any;
 
   isPublishModalOpen = false;
   offerToPublish: MyOffer | null = null;
@@ -210,9 +215,48 @@ onUnpublish(offer: MyOffer) {
       console.log('Job offer successfully unpublished.');
       this.refreshOffers.next();
       this.cdr.markForCheck();
+
+      this.lastUnpublishedOffer = offer;
+      this.isUndoToastVisible = true;
+      this.cdr.markForCheck();
+
+      if (this.toastTimeout) clearTimeout(this.toastTimeout);
+      this.toastTimeout = setTimeout(() => {
+        this.isUndoToastVisible = false;
+        this.cdr.markForCheck();
+      }, 5000);
     },
     error: (err) => {
       console.error('Failed to unpublish the offer:', err);
+    }
+  });
+}
+
+undoUnpublish() {
+  if (!this.lastUnpublishedOffer) return;
+
+  this.isUndoToastVisible = false;
+  if (this.toastTimeout) clearTimeout(this.toastTimeout);
+  this.cdr.markForCheck();
+
+  const payload = {
+    rating: this.lastUnpublishedOffer.rating ?? 5,
+    feedback: this.lastUnpublishedOffer.feedback ?? ''
+  }
+
+  this.isLoading = true;
+  this.jobOfferService.publishOffer(this.lastUnpublishedOffer.id, payload).pipe(
+    finalize(() => {
+      this.isLoading = false;
+      this.cdr.markForCheck();
+    })
+  ).subscribe({
+    next: () => {
+      console.log('Job offer successfully republished.');
+      this.refreshOffers.next();
+    },
+    error: (err) => {
+      console.error('Failed to republish the offer:', err);
     }
   });
 }
