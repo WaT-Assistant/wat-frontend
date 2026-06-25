@@ -3,42 +3,20 @@ import { CommonModule, AsyncPipe, DatePipe } from '@angular/common';
 import { JobOfferService } from '../../core/services/joboffer';
 import { JobOfferCardComponent } from '../../shared/components/job-offer-card/job-offer-card';
 import { IconComponent } from '../../shared/components/icons/icon.component';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize, switchMap, BehaviorSubject, tap } from 'rxjs';
 import { NoteBoard } from './note-board/note-board';
 import { EditOfferModalComponent } from './modals/edit-offer-modal/edit-offer-modal';
 import { DeleteOfferModalComponent } from './modals/delete-offer-modal/delete-offer-modal';
+import { PublishOfferModalComponent, type PublishOfferPayload } from './modals/publish-offer-modal/publish-offer-modal';
+import type { MyOffer } from './dashboard-models';
 
-export interface ImportantInfo {
-  id?: string;
-  sevisId?: string;
-  visaAppointment?: Date;
-  flightDate?: Date;
-  ds160?: string;
-  startOfWork?: Date;
-  endOfWork?: Date;
-}
-
-export interface MyOffer {
-  id: string;
-  position: string;
-  employer: string;
-  placeOfWork: string;
-  payPerHour: number;
-  housingProvided: boolean;
-  housingCostPerWeek: number;
-  year: number;
-  isPublished: boolean;
-  feedback?: string | null;
-  rating?: number | null;   
-  
-  importantInfo?: ImportantInfo; 
-}
+export type { ImportantInfo, MyOffer } from './dashboard-models';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, AsyncPipe, JobOfferCardComponent, IconComponent, ReactiveFormsModule, NoteBoard, EditOfferModalComponent, DeleteOfferModalComponent],
+  imports: [CommonModule, AsyncPipe, JobOfferCardComponent, IconComponent, NoteBoard, EditOfferModalComponent, DeleteOfferModalComponent, PublishOfferModalComponent],
   templateUrl: './dashboard.html'
 })
 export class DashboardComponent implements OnInit {
@@ -62,7 +40,6 @@ export class DashboardComponent implements OnInit {
   offerToPublish: MyOffer | null = null;
   
   offerForm!: FormGroup;
-  publishForm!: FormGroup;
 
   ngOnInit() {
     this.initForm();
@@ -81,11 +58,6 @@ export class DashboardComponent implements OnInit {
       ],
       housingProvided: [false],
       housingCostPerWeek: [null]
-    });
-
-    this.publishForm = this.fb.group({
-      rating: [5, [Validators.required, Validators.min(1), Validators.max(5)]],
-      feedback: ['']
     });
   }
 
@@ -201,7 +173,6 @@ confirmDelete() {
 
 openPublishModal(offer: MyOffer) {
   this.offerToPublish = offer;
-  this.publishForm.reset({ rating: 5, feedback: '' }); 
   this.isPublishModalOpen = true;
 }
 
@@ -210,15 +181,10 @@ closePublishModal() {
   this.offerToPublish = null;
 }
 
-setRating(stars: number) {
-  this.publishForm.patchValue({ rating: stars });
-}
-
-confirmPublish() {
-  if (!this.offerToPublish || this.publishForm.invalid) return;
+confirmPublish(payload: PublishOfferPayload) {
+  if (!this.offerToPublish) return;
 
   this.isLoading = true;
-  const payload = this.publishForm.value;
 
   this.jobOfferService.publishOffer(this.offerToPublish.id, payload).pipe(
     finalize(() => {

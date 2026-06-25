@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { MyOffer } from '../../features/dashboard/dashboard';
+import type { MyOffer } from '../../features/dashboard/dashboard-models';
 import { PublicOffer } from '../../features/public-offers-page/public-offers-page';
 
 @Injectable({

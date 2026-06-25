@@ -8,7 +8,7 @@ import { DeleteInfoModalComponent } from './modals/delete-info-modal/delete-info
 import { ImportantInfoService } from '../../../core/services/importantinfo';
 import { finalize } from 'rxjs';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { MyOffer } from '../../../features/dashboard/dashboard';
+import type { MyOffer } from '../../../features/dashboard/dashboard-models';
 
 @Component({
   selector: 'app-job-offer-card',
