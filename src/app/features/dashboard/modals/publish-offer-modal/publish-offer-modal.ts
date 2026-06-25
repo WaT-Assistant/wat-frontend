@@ -35,7 +35,9 @@ export class PublishOfferModalComponent {
   constructor() {
     effect(() => {
       if (this.isOpen() && this.offer()) {
-        this.publishForm.reset({ rating: 5, feedback: '' });
+        this.publishForm.reset({ 
+            rating: this.offer()?.rating ?? 5, 
+            feedback: this.offer()?.feedback ?? '' });
       }
     });
   }
