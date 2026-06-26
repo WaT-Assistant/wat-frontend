@@ -9,6 +9,8 @@ import { NoteBoard } from './note-board/note-board';
 import { EditOfferModalComponent } from './modals/edit-offer-modal/edit-offer-modal';
 import { DeleteOfferModalComponent } from './modals/delete-offer-modal/delete-offer-modal';
 import { PublishOfferModalComponent, type PublishOfferPayload } from './modals/publish-offer-modal/publish-offer-modal';
+import { ToastComponent } from '../../shared/components/toast/toast.component';
+import { ToastService } from '../../core/services/toast.service';
 import type { MyOffer } from './dashboard-models';
 
 export type { ImportantInfo, MyOffer } from './dashboard-models';
@@ -16,7 +18,7 @@ export type { ImportantInfo, MyOffer } from './dashboard-models';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, AsyncPipe, JobOfferCardComponent, IconComponent, NoteBoard, EditOfferModalComponent, DeleteOfferModalComponent, PublishOfferModalComponent],
+  imports: [CommonModule, AsyncPipe, JobOfferCardComponent, IconComponent, NoteBoard, EditOfferModalComponent, DeleteOfferModalComponent, PublishOfferModalComponent, ToastComponent],
   templateUrl: './dashboard.html'
 })
 export class DashboardComponent implements OnInit {
@@ -28,6 +30,7 @@ export class DashboardComponent implements OnInit {
   );
   private cdr = inject(ChangeDetectorRef);
   private fb = inject(FormBuilder);
+  private toastService = inject(ToastService);
   selectedOffer: MyOffer | null = null;
   private currentYear = new Date().getFullYear();
   isModalOpen = false;
@@ -36,10 +39,6 @@ export class DashboardComponent implements OnInit {
   errorMessage: string | null = null;
   isDeleteModalOpen = false;
   offerIdToDelete: string | null = null;
-
-  isUndoToastVisible = false;
-  lastUnpublishedOffer: MyOffer | null = null;
-  private toastTimeout: any;
 
   isPublishModalOpen = false;
   offerToPublish: MyOffer | null = null;
@@ -216,15 +215,11 @@ onUnpublish(offer: MyOffer) {
       this.refreshOffers.next();
       this.cdr.markForCheck();
 
-      this.lastUnpublishedOffer = offer;
-      this.isUndoToastVisible = true;
-      this.cdr.markForCheck();
-
-      if (this.toastTimeout) clearTimeout(this.toastTimeout);
-      this.toastTimeout = setTimeout(() => {
-        this.isUndoToastVisible = false;
-        this.cdr.markForCheck();
-      }, 5000);
+      this.toastService.showUndo(
+        'Offer unpublished',
+        'Hidden from public board',
+        () => this.republish(offer)
+      );
     },
     error: (err) => {
       console.error('Failed to unpublish the offer:', err);
@@ -232,20 +227,14 @@ onUnpublish(offer: MyOffer) {
   });
 }
 
-undoUnpublish() {
-  if (!this.lastUnpublishedOffer) return;
-
-  this.isUndoToastVisible = false;
-  if (this.toastTimeout) clearTimeout(this.toastTimeout);
-  this.cdr.markForCheck();
-
+private republish(offer: MyOffer) {
   const payload = {
-    rating: this.lastUnpublishedOffer.rating ?? 5,
-    feedback: this.lastUnpublishedOffer.feedback ?? ''
+    rating: offer.rating ?? 5,
+    feedback: offer.feedback ?? ''
   }
 
   this.isLoading = true;
-  this.jobOfferService.publishOffer(this.lastUnpublishedOffer.id, payload).pipe(
+  this.jobOfferService.publishOffer(offer.id, payload).pipe(
     finalize(() => {
       this.isLoading = false;
       this.cdr.markForCheck();
