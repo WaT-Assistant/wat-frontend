@@ -35,6 +35,10 @@ export class MainLayout {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
 
+  isAuthRoute(): boolean {
+    return this.router.url === '/login' || this.router.url === '/register';
+  }
+
   onLogout() {
     this.authService.logout().subscribe({
     next: () => {

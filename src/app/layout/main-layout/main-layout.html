@@ -13,6 +13,7 @@
     </div>
     
     <div class="flex items-center space-x-4">
+      @if(!isAuthRoute()) {
         @if (isLoggedIn$ | async) {
           <button 
             (click)="onLogout()" 
@@ -27,6 +28,7 @@
             Register
           </a>
         }
+      }
       </div>
   </header>
 
