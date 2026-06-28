@@ -41,7 +41,9 @@ export class MainLayout {
   onLogout() {
     this.authService.logout().subscribe({
     next: () => {
-      this.router.navigate(['/']);// Redirect to landing after logout
+      if(this.router.url.startsWith('/dashboard')) {
+        this.router.navigate(['/']);// Redirect to landing after logout
+      }
     },
     error: (err) => {
       console.error('Error on sign out', err);
