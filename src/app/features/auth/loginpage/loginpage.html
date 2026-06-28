@@ -46,6 +46,12 @@
           </div>
         </div>
 
+        @if (isLoading) {
+          <div class="flex flex-col items-center justify-center">
+            <app-icon name="loader"></app-icon>
+          </div>
+        }
+
         @if (errorMessage) {
           <div class="text-red-500 text-sm font-medium px-1">
             {{ errorMessage }}

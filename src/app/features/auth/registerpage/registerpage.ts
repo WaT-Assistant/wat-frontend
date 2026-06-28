@@ -3,12 +3,13 @@ import {RouterLink, Router} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {Auth, RegisterPayload} from '../../../core/services/auth';
 import { RegisterFormData } from '../models/auth';
-
+import { finalize } from 'rxjs';
+import {IconComponent} from '../../../shared/components/icons/icon.component';
 
 @Component({
   selector: 'app-registerpage',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, IconComponent],
   templateUrl: './registerpage.html'
 })
 export class RegisterPageComponent {
@@ -17,6 +18,7 @@ export class RegisterPageComponent {
   private authService = inject(Auth);
   router = inject(Router);
   cdr = inject(ChangeDetectorRef);
+  isLoading = false;
 
   formData: RegisterFormData = {
     email: '',
@@ -34,6 +36,7 @@ export class RegisterPageComponent {
       this.errorMessage = 'Please fill in all the fields'; 
       return;
     }
+    this.isLoading = true;
 
     const payload: RegisterPayload = {
       FullName: this.formData.fullname,
@@ -41,7 +44,12 @@ export class RegisterPageComponent {
       Password: this.formData.password
     };
 
-    this.authService.register(payload).subscribe({
+    this.authService.register(payload)
+    .pipe(finalize(() => {
+      this.isLoading = false;
+      this.cdr.markForCheck();
+    }))
+    .subscribe({
       next: (response) => {
         console.log('Registration successful:', response);
 
@@ -79,8 +87,6 @@ export class RegisterPageComponent {
           this.errorMessage = 'Server error. Please try again later.';
           console.error('Registration failed:', err);
         }
-
-        this.cdr.detectChanges();
       }
     });
   }
