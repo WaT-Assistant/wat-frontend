@@ -8,7 +8,7 @@ import { DeleteInfoModalComponent } from './modals/delete-info-modal/delete-info
 import { ImportantInfoService } from '../../../core/services/importantinfo';
 import { finalize } from 'rxjs';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { MyOffer } from '../../../features/dashboard/dashboard';
+import type { MyOffer } from '../../../features/dashboard/dashboard-models';
 
 @Component({
   selector: 'app-job-offer-card',
@@ -21,6 +21,8 @@ export class JobOfferCardComponent {
 
   @Output() edit = new EventEmitter<MyOffer>();
   @Output() delete = new EventEmitter<string>();
+  @Output() publish = new EventEmitter<MyOffer>();
+  @Output() unpublish = new EventEmitter<MyOffer>();
 
   @ViewChild('menuContainer') menuContainer!: ElementRef;
   
@@ -107,6 +109,14 @@ confirmDeleteDoc() {
     }
   });
 }
+
+  togglePublish(){
+    if(!this.offer.isPublished)
+      this.publish.emit(this.offer);
+    else{
+      this.unpublish.emit(this.offer);
+    }
+  }
 
   saveInfo() {
   this.isLoadingInfo = true; 

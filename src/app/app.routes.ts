@@ -5,6 +5,7 @@ import {LoginPageComponent} from './features/auth/loginpage/loginpage';
 import{RegisterPageComponent} from './features/auth/registerpage/registerpage';
 import { authGuard } from './core/guards/auth.guard';
 import { DashboardComponent } from './features/dashboard/dashboard';
+import { PublicOffersPage } from './features/public-offers-page/public-offers-page';
 
 export const routes: Routes = [
   {
@@ -27,6 +28,10 @@ export const routes: Routes = [
         path: 'dashboard',
         component: DashboardComponent,
         canActivate: [authGuard]
+      },
+      {
+        path: 'public-offers',
+        component: PublicOffersPage
       },
 
       { path: '**', redirectTo: '' }

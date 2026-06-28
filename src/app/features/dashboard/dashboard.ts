@@ -3,42 +3,22 @@ import { CommonModule, AsyncPipe, DatePipe } from '@angular/common';
 import { JobOfferService } from '../../core/services/joboffer';
 import { JobOfferCardComponent } from '../../shared/components/job-offer-card/job-offer-card';
 import { IconComponent } from '../../shared/components/icons/icon.component';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize, switchMap, BehaviorSubject, tap } from 'rxjs';
 import { NoteBoard } from './note-board/note-board';
 import { EditOfferModalComponent } from './modals/edit-offer-modal/edit-offer-modal';
 import { DeleteOfferModalComponent } from './modals/delete-offer-modal/delete-offer-modal';
+import { PublishOfferModalComponent, type PublishOfferPayload } from './modals/publish-offer-modal/publish-offer-modal';
+import { ToastComponent } from '../../shared/components/toast/toast.component';
+import { ToastService } from '../../core/services/toast.service';
+import type { MyOffer } from './dashboard-models';
 
-export interface ImportantInfo {
-  id?: string;
-  sevisId?: string;
-  visaAppointment?: Date;
-  flightDate?: Date;
-  ds160?: string;
-  startOfWork?: Date;
-  endOfWork?: Date;
-}
-
-export interface MyOffer {
-  id: string;
-  position: string;
-  employer: string;
-  placeOfWork: string;
-  payPerHour: number;
-  housingProvided: boolean;
-  housingCostPerWeek: number;
-  year: number;
-  isPublished: boolean;
-  
-  rating?: number | null;   
-  
-  importantInfo?: ImportantInfo; 
-}
+export type { ImportantInfo, MyOffer } from './dashboard-models';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, AsyncPipe, JobOfferCardComponent, IconComponent, ReactiveFormsModule, NoteBoard, EditOfferModalComponent, DeleteOfferModalComponent],
+  imports: [CommonModule, AsyncPipe, JobOfferCardComponent, IconComponent, NoteBoard, EditOfferModalComponent, DeleteOfferModalComponent, PublishOfferModalComponent, ToastComponent],
   templateUrl: './dashboard.html'
 })
 export class DashboardComponent implements OnInit {
@@ -50,13 +30,18 @@ export class DashboardComponent implements OnInit {
   );
   private cdr = inject(ChangeDetectorRef);
   private fb = inject(FormBuilder);
+  private toastService = inject(ToastService);
   selectedOffer: MyOffer | null = null;
   private currentYear = new Date().getFullYear();
   isModalOpen = false;
   isLoading = false;
+
   errorMessage: string | null = null;
   isDeleteModalOpen = false;
   offerIdToDelete: string | null = null;
+
+  isPublishModalOpen = false;
+  offerToPublish: MyOffer | null = null;
   
   offerForm!: FormGroup;
 
@@ -188,6 +173,81 @@ confirmDelete() {
     });
   }
 
+}
+
+openPublishModal(offer: MyOffer) {
+  this.offerToPublish = offer;
+  this.isPublishModalOpen = true;
+}
+
+closePublishModal() {
+  this.isPublishModalOpen = false;
+  this.offerToPublish = null;
+}
+
+confirmPublish(payload: PublishOfferPayload) {
+  if (!this.offerToPublish) return;
+
+  this.isLoading = true;
+
+  this.jobOfferService.publishOffer(this.offerToPublish.id, payload).pipe(
+    finalize(() => {
+      this.isLoading = false;
+      this.cdr.markForCheck();
+    })
+  ).subscribe({
+    next: () => {
+      console.log('Job offer successfully published.');
+      this.refreshOffers.next();
+      this.closePublishModal();
+    },
+    error: (err) => {
+      console.error('Failed to publish the offer:', err);
+      this.closePublishModal();
+    }
+  });
+}
+
+onUnpublish(offer: MyOffer) {
+  this.jobOfferService.unpublishOffer(offer.id).subscribe({
+    next: () => {
+      console.log('Job offer successfully unpublished.');
+      this.refreshOffers.next();
+      this.cdr.markForCheck();
+
+      this.toastService.showUndo(
+        'Offer unpublished',
+        'Hidden from public board',
+        () => this.republish(offer)
+      );
+    },
+    error: (err) => {
+      console.error('Failed to unpublish the offer:', err);
+    }
+  });
+}
+
+private republish(offer: MyOffer) {
+  const payload = {
+    rating: offer.rating ?? 5,
+    feedback: offer.feedback ?? ''
+  }
+
+  this.isLoading = true;
+  this.jobOfferService.publishOffer(offer.id, payload).pipe(
+    finalize(() => {
+      this.isLoading = false;
+      this.cdr.markForCheck();
+    })
+  ).subscribe({
+    next: () => {
+      console.log('Job offer successfully republished.');
+      this.refreshOffers.next();
+    },
+    error: (err) => {
+      console.error('Failed to republish the offer:', err);
+    }
+  });
 }
 
   private getSpecificErrorMessage(): string {

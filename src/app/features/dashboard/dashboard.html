@@ -20,10 +20,11 @@
           <app-job-offer-card [offer]="offer"
             (edit)="openEditModal(offer)" 
             (delete)="openDeleteModal(offer.id)"
-          >
-            
+            (publish)="openPublishModal(offer)" 
+            (unpublish)="onUnpublish(offer)">
           </app-job-offer-card>
-        } @empty {
+        } 
+        @empty {
           <div class="mt-6 border-2 border-dashed border-gray-200 rounded-2xl p-10 text-center">
             <p class="text-gray-500 font-medium">No offers found. Create your first one!</p>
           </div>
@@ -58,3 +59,13 @@
   (confirm)="confirmDelete()"
   (close)="closeDeleteModal()">
 </app-delete-offer-modal>
+
+<app-publish-offer-modal
+  [isOpen]="isPublishModalOpen"
+  [offer]="offerToPublish"
+  [isLoading]="isLoading"
+  (close)="closePublishModal()"
+  (publish)="confirmPublish($event)">
+</app-publish-offer-modal>
+
+<app-toast></app-toast>

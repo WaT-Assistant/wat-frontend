@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { MyOffer } from '../../features/dashboard/dashboard';
+import type { MyOffer } from '../../features/dashboard/dashboard-models';
+import { PublicOffer } from '../../features/public-offers-page/public-offers-page';
 
 @Injectable({
   providedIn: 'root'
@@ -25,5 +26,20 @@ export class JobOfferService {
 
   deleteOffer(offerId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${offerId}`);
+  }
+
+  getPublicOffers(page: number, pageSize: number = 12): Observable<PublicOffer[]> {
+  const params = new HttpParams()
+  .set('page', page)
+  .set('pageSize', pageSize);
+    return this.http.get<PublicOffer[]>(`${this.apiUrl}/published`, {params});
+  }
+
+  publishOffer(offerId: string, data: any): Observable<MyOffer>{
+    return this.http.put<MyOffer>(`${this.apiUrl}/${offerId}/publish`, data);
+  }
+
+  unpublishOffer(offerId: string): Observable<MyOffer>{
+    return this.http.put<MyOffer>(`${this.apiUrl}/${offerId}/unpublish`, {});
   }
 }
