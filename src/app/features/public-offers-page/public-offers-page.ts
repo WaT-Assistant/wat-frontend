@@ -13,7 +13,8 @@ export interface PublicOffer{
   year: number;
   isPublished: boolean;
   feedback?: string | null;
-  rating?: number | null;   
+  rating?: number | null;
+  authorName?: string | null;   
 }
 
 @Component({
