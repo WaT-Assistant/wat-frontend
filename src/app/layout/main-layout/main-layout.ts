@@ -25,17 +25,14 @@ export class MainLayout {
   constructor() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.isAuthPage = event.url === '/login' || event.url === '/register';
+        const cleanedUrl = event.urlAfterRedirects.split('?')[0].split('#')[0];
+        this.isAuthPage = cleanedUrl === '/login' || cleanedUrl === '/register';
       }
     });
   }
   
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
-  }
-
-  isAuthRoute(): boolean {
-    return this.router.url === '/login' || this.router.url === '/register';
   }
 
   onLogout() {

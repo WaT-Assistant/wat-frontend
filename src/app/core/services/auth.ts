@@ -48,9 +48,13 @@ export class Auth {
     return this.http.post(`${this.apiUrl}/Logout`, {}, {withCredentials: true})
     .pipe(
       tap(() => {
-        localStorage.removeItem('isLoggedIn');
-        this.currentUserSubject.next(false); // Notify app that user is logged out
+        this.clearAuthState();
       }) 
     );
+  }
+
+  clearAuthState() {
+    localStorage.removeItem('isLoggedIn');
+    this.currentUserSubject.next(false);  // Notify app that user is logged out
   }
 }
