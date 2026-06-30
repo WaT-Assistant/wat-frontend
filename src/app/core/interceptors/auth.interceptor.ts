@@ -18,7 +18,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401) {
         console.error('Expired token');
         auth.clearAuthState();
-        router.navigate(['/login']); 
+
+        const currentUrl = router.routerState.snapshot.url;
+
+        router.navigate(['/login'], { queryParams: { returnUrl: currentUrl } });
       }
       
       return throwError(() => error);
