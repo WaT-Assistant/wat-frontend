@@ -53,6 +53,10 @@ export class Auth {
     );
   }
 
+  refreshToken(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Refresh`, {}, { withCredentials: true });
+  }
+
   clearAuthState() {
     localStorage.removeItem('isLoggedIn');
     this.currentUserSubject.next(false);  // Notify app that user is logged out
