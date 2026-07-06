@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from '../../../icons/icon.component';
+import { IconComponent } from '../../../../../shared/components/icons/icon.component';
 
 @Component({
   selector: 'app-delete-info-modal',

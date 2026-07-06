@@ -2,7 +2,7 @@ import { Component, Input, inject, ChangeDetectorRef, EventEmitter, Output, Host
   ViewChild
  } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from '../icons/icon.component';
+import { IconComponent } from '../../../shared/components/icons/icon.component';
 import { EditInfoModalComponent } from './modals/edit-info-modal/edit-info-modal';
 import { DeleteInfoModalComponent } from './modals/delete-info-modal/delete-info-modal';
 import { ImportantInfoService } from '../../../core/services/importantinfo';

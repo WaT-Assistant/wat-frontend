@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule, AsyncPipe, DatePipe } from '@angular/common';
 import { JobOfferService } from '../../core/services/joboffer';
-import { JobOfferCardComponent } from '../../shared/components/job-offer-card/job-offer-card';
+import { JobOfferCardComponent } from './job-offer-card/job-offer-card';
 import { IconComponent } from '../../shared/components/icons/icon.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize, switchMap, BehaviorSubject, tap } from 'rxjs';
