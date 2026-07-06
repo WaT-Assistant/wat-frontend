@@ -6,6 +6,7 @@ import{RegisterPageComponent} from './features/auth/registerpage/registerpage';
 import { authGuard } from './core/guards/auth.guard';
 import { DashboardComponent } from './features/dashboard/dashboard';
 import { PublicOffersPage } from './features/public-offers-page/public-offers-page';
+import { unauthGuard } from './core/guards/unauth.guard';
 
 export const routes: Routes = [
   {
@@ -18,11 +19,13 @@ export const routes: Routes = [
       },
       {
         path: 'login',
-        component: LoginPageComponent
+        component: LoginPageComponent,
+        canActivate: [unauthGuard]
       },
       {
         path: 'register',
-        component: RegisterPageComponent
+        component: RegisterPageComponent,
+        canActivate: [unauthGuard]
       },
       {
         path: 'dashboard',

@@ -1,9 +1,11 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, throwError, switchMap } from 'rxjs';
+import { catchError, throwError, switchMap, BehaviorSubject, filter, take } from 'rxjs';
 import { Auth } from '../services/auth';
 
+let isRefreshing = false;
+const refreshTokenSubject = new BehaviorSubject<boolean>(false);
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
@@ -19,25 +21,45 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401 && !req.url.includes('/api/Auth/')) {
-        console.warn('Access token expired, attempting to refresh...');
+        
+        if (!isRefreshing) {
+          isRefreshing = true;
+          refreshTokenSubject.next(false);
 
-        return auth.refreshToken().pipe(
-          switchMap(() => {
-            return next(authReq);
-          }),
-          catchError((refreshError) => {
-            console.error('Refresh token expired or invalid');
-            auth.clearAuthState();
+          console.warn('Access token expired, attempting to refresh...');
 
-            const currentUrl = router.routerState.snapshot.url;
-            router.navigate(['/login'], { queryParams: { returnUrl: currentUrl } });
-            
-            return throwError(() => refreshError);
-          })
-        );
+          return auth.refreshToken().pipe(
+            switchMap(() => {
+              isRefreshing = false;
+              refreshTokenSubject.next(true);
+              return next(authReq); 
+            }),
+            catchError((refreshError) => {
+              isRefreshing = false;
+              refreshTokenSubject.next(false);
+              
+              console.error('Refresh token expired or invalid');
+              auth.clearAuthState();
+
+              const currentUrl = router.routerState.snapshot.url;
+              router.navigate(['/login'], { queryParams: { returnUrl: currentUrl } });
+              
+              return throwError(() => refreshError);
+            })
+          );
+        } 
+        else {
+          return refreshTokenSubject.pipe(
+            filter(tokenRefreshed => tokenRefreshed === true),
+            take(1), 
+            switchMap(() => {
+              return next(authReq); 
+            })
+          );
+        }
       }
       
       return throwError(() => error);
     })
-  );;
+  );
 };
