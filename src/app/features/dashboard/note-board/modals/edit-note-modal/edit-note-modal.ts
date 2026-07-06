@@ -2,11 +2,12 @@ import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from 
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Note } from '../../../../../core/services/note';
+import { IconComponent } from '../../../../../shared/components/icons/icon.component';
 
 @Component({
   selector: 'app-edit-note-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, IconComponent],
   templateUrl: './edit-note-modal.html',
   styleUrl: './edit-note-modal.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

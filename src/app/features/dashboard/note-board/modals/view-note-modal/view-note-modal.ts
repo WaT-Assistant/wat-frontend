@@ -1,11 +1,12 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Note } from '../../../../../core/services/note';
+import { IconComponent } from '../../../../../shared/components/icons/icon.component';
 
 @Component({
   selector: 'app-view-note-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   templateUrl: './view-note-modal.html',
   styleUrl: './view-note-modal.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

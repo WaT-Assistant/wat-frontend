@@ -2,16 +2,17 @@ import { Component, inject, OnInit, ChangeDetectorRef, ViewChild, signal } from 
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BehaviorSubject, switchMap, tap } from 'rxjs';
-import { NoteComponent } from '../../../shared/components/note/note';
+import { NoteComponent } from './note/note';
 import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal';
 import { ViewNoteModalComponent } from './modals/view-note-modal/view-note-modal';
 import { EditNoteModalComponent } from './modals/edit-note-modal/edit-note-modal';
 import { NoteService } from '../../../core/services/note';
 import { Note } from '../../../core/services/note';
+import { IconComponent } from "../../../shared/components/icons/icon.component";
 
 @Component({
   selector: 'app-note-board',
-  imports: [CommonModule, ReactiveFormsModule, NoteComponent, ConfirmationModalComponent, ViewNoteModalComponent, EditNoteModalComponent],  
+  imports: [CommonModule, ReactiveFormsModule, NoteComponent, ConfirmationModalComponent, ViewNoteModalComponent, EditNoteModalComponent, IconComponent],  
   templateUrl: './note-board.html',
   styleUrl: './note-board.scss',
 })

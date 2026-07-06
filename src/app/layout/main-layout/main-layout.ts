@@ -3,11 +3,12 @@ import { RouterOutlet, RouterModule, Router, NavigationEnd, RouterLink } from '@
 import { SidebarComponent } from '../sidebar/sidebar';
 import { Auth } from '../../core/services/auth';
 import { AsyncPipe } from '@angular/common';
+import { IconComponent } from '../../shared/components/icons/icon.component';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, SidebarComponent, AsyncPipe, RouterLink],
+  imports: [RouterOutlet, RouterModule, SidebarComponent, AsyncPipe, RouterLink, IconComponent],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.scss',
 })

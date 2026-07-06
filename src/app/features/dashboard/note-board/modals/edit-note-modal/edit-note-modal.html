@@ -8,18 +8,17 @@
       <button 
         (click)="onClose()" 
         class="absolute top-4 right-4 p-2 text-black/40 hover:text-black/70 transition-colors z-10">
-        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
+        <app-icon name="cross"></app-icon>
       </button>
 
       <form [formGroup]="editForm" (ngSubmit)="onSave()">
         
         <div class="p-8 pb-6 mt-4">
-          <textarea 
+          <textarea
             formControlName="text"
             class="w-full h-48 bg-transparent border-none focus:ring-0 text-gray-800 text-lg placeholder-black/30 resize-none outline-none"
-            placeholder="Jot down details..."></textarea>
+            placeholder="Jot down details...">
+            </textarea>
         </div>
 
         <hr class="border-black/10 mx-8">
