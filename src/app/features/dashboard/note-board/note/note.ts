@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IconComponent } from '../icons/icon.component';
+import { IconComponent } from '../../../../shared/components/icons/icon.component';
 import { DatePipe } from '@angular/common';
-import { Note } from '../../../core/services/note';
+import { Note } from '../../../../core/services/note';
 
 @Component({
   selector: 'app-note',

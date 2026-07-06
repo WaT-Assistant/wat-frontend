@@ -2,7 +2,7 @@ import { Component, inject, OnInit, ChangeDetectorRef, ViewChild, signal } from 
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BehaviorSubject, switchMap, tap } from 'rxjs';
-import { NoteComponent } from '../../../shared/components/note/note';
+import { NoteComponent } from './note/note';
 import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal';
 import { ViewNoteModalComponent } from './modals/view-note-modal/view-note-modal';
 import { EditNoteModalComponent } from './modals/edit-note-modal/edit-note-modal';
