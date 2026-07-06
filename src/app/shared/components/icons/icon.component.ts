@@ -101,11 +101,29 @@ import { Component, Input } from '@angular/core';
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />
         </svg>
       }
+      @case ('note-board-empty') {
+        <svg class="w-12 h-12 mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+      }
+      @case ('cross') {
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      }
+      @case ('cite') {
+        <svg class="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 32 32">
+          <path d="M10 8c-3.3 0-6 2.7-6 6v10h10V14H8.4c.4-1.9 2.1-3.5 4.1-3.8V8zm14 0c-3.3 0-6 2.7-6 6v10h10V14h-5.6c.4-1.9 2.1-3.5 4.1-3.8V8z"/>
+        </svg>
+      }
+      @case ('sidebar') {
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      }
     }
   `
 })
 export class IconComponent {
   @Input({ required: true }) name!: string;
   
-  @Input() customClass: string = 'w-5 h-5'; 
+  @Input() customClass: string = 'w-5 h-5';
 }
