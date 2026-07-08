@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ImportantInfo } from '../../features/dashboard/dashboard';
+import { environment } from '../../env/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { ImportantInfo } from '../../features/dashboard/dashboard';
 export class ImportantInfoService {
   private http = inject(HttpClient);
   
-  private apiUrl = 'http://localhost:8080/api/ImportantInfo'; 
+  private apiUrl =`${environment.apiUrl}/ImportantInfo`; 
 
   createImportantInfo(offerId: string, payload: any): Observable<ImportantInfo> {
     return this.http.post<ImportantInfo>(`${this.apiUrl}/${offerId}`, payload);

@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { environment } from '../../env/environment';
 
 export interface RegisterPayload {
   FullName: string;
@@ -19,7 +20,7 @@ export interface LoginPayload {
 export class Auth {
   private http = inject(HttpClient);
   
-  private apiUrl = 'http://localhost:8080/api/Auth';
+  private apiUrl =`${environment.apiUrl}/Auth`;
 
   private currentUserSubject = new BehaviorSubject<boolean>(this.isAuthenticated());
   public isLoggedIn$ = this.currentUserSubject.asObservable();

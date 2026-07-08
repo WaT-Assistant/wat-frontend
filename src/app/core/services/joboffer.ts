@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import type { MyOffer } from '../../features/dashboard/dashboard-models';
 import { PublicOffer } from '../../features/public-offers-page/public-offers-page';
+import { environment } from '../../env/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { PublicOffer } from '../../features/public-offers-page/public-offers-pag
 export class JobOfferService {
   private http = inject(HttpClient);
   
-  private apiUrl = 'http://localhost:8080/api/JobOffer'; 
+  private apiUrl =`${environment.apiUrl}/JobOffer`; 
 
   getUserOffers(): Observable<MyOffer[]> {
     return this.http.get<MyOffer[]>(`${this.apiUrl}`);
