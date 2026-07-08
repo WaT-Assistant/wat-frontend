@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { environment } from '../../env/environment';
 
 export interface RegisterPayload {
   FullName: string;
@@ -19,7 +20,7 @@ export interface LoginPayload {
 export class Auth {
   private http = inject(HttpClient);
   
-  private apiUrl = 'http://localhost:8080/api/Auth';
+  private apiUrl =`${environment.apiUrl}/Auth`;
 
   private currentUserSubject = new BehaviorSubject<boolean>(this.isAuthenticated());
   public isLoggedIn$ = this.currentUserSubject.asObservable();
@@ -48,9 +49,17 @@ export class Auth {
     return this.http.post(`${this.apiUrl}/Logout`, {}, {withCredentials: true})
     .pipe(
       tap(() => {
-        localStorage.removeItem('isLoggedIn');
-        this.currentUserSubject.next(false); // Notify app that user is logged out
+        this.clearAuthState();
       }) 
     );
+  }
+
+  refreshToken(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Refresh`, {}, { withCredentials: true });
+  }
+
+  clearAuthState() {
+    localStorage.removeItem('isLoggedIn');
+    this.currentUserSubject.next(false);  // Notify app that user is logged out
   }
 }

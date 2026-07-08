@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { environment } from "../../env/environment";
 
 export interface Note{
   id: string;
@@ -15,7 +16,7 @@ export interface Note{
 
 export class NoteService{
     http = inject(HttpClient);
-    private apiUrl = 'http://localhost:8080/api/Note';
+    private apiUrl =`${environment.apiUrl}/Note`;
 
     getNoteById(id: string): Observable<Note>{
         return this.http.get<Note>(`${this.apiUrl}/${id}`);

@@ -3,12 +3,14 @@ import {RouterLink, Router} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {Auth, RegisterPayload} from '../../../core/services/auth';
 import { RegisterFormData } from '../models/auth';
-
+import { finalize } from 'rxjs';
+import {IconComponent} from '../../../shared/components/icons/icon.component';
+import { LoggerService } from '../../../core/services/logger.service';
 
 @Component({
   selector: 'app-registerpage',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, IconComponent],
   templateUrl: './registerpage.html'
 })
 export class RegisterPageComponent {
@@ -17,6 +19,8 @@ export class RegisterPageComponent {
   private authService = inject(Auth);
   router = inject(Router);
   cdr = inject(ChangeDetectorRef);
+  isLoading = false;
+  private logger = inject(LoggerService);
 
   formData: RegisterFormData = {
     email: '',
@@ -34,6 +38,7 @@ export class RegisterPageComponent {
       this.errorMessage = 'Please fill in all the fields'; 
       return;
     }
+    this.isLoading = true;
 
     const payload: RegisterPayload = {
       FullName: this.formData.fullname,
@@ -41,9 +46,14 @@ export class RegisterPageComponent {
       Password: this.formData.password
     };
 
-    this.authService.register(payload).subscribe({
+    this.authService.register(payload)
+    .pipe(finalize(() => {
+      this.isLoading = false;
+      this.cdr.markForCheck();
+    }))
+    .subscribe({
       next: (response) => {
-        console.log('Registration successful:', response);
+        this.logger.log('Registration successful:', response);
 
         const loginPayload = {
           Email: this.formData.email,
@@ -56,7 +66,7 @@ export class RegisterPageComponent {
             this.router.navigate(['/']);
           },
           error: (loginErr) => {
-            console.error('Auto-login failed:', loginErr);
+            this.logger.error('Auto-login failed:', loginErr);
             // Fallback: send them to login page if auto-login fails
             this.router.navigate(['/login']);
           }
@@ -74,13 +84,11 @@ export class RegisterPageComponent {
           } else {
             this.errorMessage = 'Registration failed. Please check your data.';
           }
-          console.error('Registration failed:', err.error);
+          this.logger.error('Registration failed:', err.error);
         } else {
           this.errorMessage = 'Server error. Please try again later.';
-          console.error('Registration failed:', err);
+          this.logger.error('Registration failed:', err.message);
         }
-
-        this.cdr.detectChanges();
       }
     });
   }

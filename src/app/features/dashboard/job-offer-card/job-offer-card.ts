@@ -2,12 +2,13 @@ import { Component, Input, inject, ChangeDetectorRef, EventEmitter, Output, Host
   ViewChild
  } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from '../icons/icon.component';
+import { IconComponent } from '../../../shared/components/icons/icon.component';
 import { EditInfoModalComponent } from './modals/edit-info-modal/edit-info-modal';
 import { DeleteInfoModalComponent } from './modals/delete-info-modal/delete-info-modal';
 import { ImportantInfoService } from '../../../core/services/importantinfo';
 import { finalize } from 'rxjs';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import {LoggerService} from '../../../core/services/logger.service';
 import type { MyOffer } from '../../../features/dashboard/dashboard-models';
 
 @Component({
@@ -29,6 +30,7 @@ export class JobOfferCardComponent {
   private infoService = inject(ImportantInfoService); 
   private cdr = inject(ChangeDetectorRef);
   private fb = inject(FormBuilder);
+  private logger = inject(LoggerService);
 
   isEditingInfo: boolean = false;
   infoForm!: FormGroup;
@@ -98,13 +100,13 @@ confirmDeleteDoc() {
 
   this.infoService.deleteImportantInfo(this.documentIdToDelete).subscribe({
     next: () => {
-      console.log('Document info successfully deleted.');
+      this.logger.log('Document info successfully deleted.');
       this.importantInfo = null;
       this.closeDeleteInfoModal();
       this.cdr.markForCheck();
     },
     error: (err: any) => {
-      console.error('Failed to delete document info: ', err);
+      this.logger.error('Failed to delete document info: ', err.message);
       this.closeDeleteInfoModal();
     }
   });
@@ -142,7 +144,7 @@ confirmDeleteDoc() {
         this.importantInfo = savedData; 
         this.isEditingInfo = false; 
       },
-      error: (err) => console.error('Error on updating', err)
+      error: (err) => this.logger.error('Error on updating', err.message)
     });
   } 
   
@@ -157,7 +159,7 @@ confirmDeleteDoc() {
         this.importantInfo = createdData;
         this.isEditingInfo = false; 
       },
-      error: (err) => console.error('Error on creating', err)
+      error: (err) => this.logger.error('Error on creating', err.message)
     });
   }
  }
@@ -183,10 +185,10 @@ confirmDeleteDoc() {
 
   private fetchImportantInfo() {
     this.isLoadingInfo = true;
-    console.log('1) Request working. Turn on loader');
+    this.logger.log('1) Request working. Turn on loader');
     this.infoService.getImportantInfoByOfferId(this.offer.id).pipe(
       finalize(() => {
-        console.log('3) finalize worked, turn off loader');
+        this.logger.log('3) finalize worked, turn off loader');
         this.isLoadingInfo = false;
         this.hasLoaded = true;
         this.cdr.markForCheck();
@@ -194,11 +196,11 @@ confirmDeleteDoc() {
     )
     .subscribe({
       next: (data) => {
-        console.log('2) data fetched to component: ', data);
+        this.logger.log('2) data fetched to component: ', data);
         this.importantInfo = data;
       },
       error: (err) => {
-        console.error('Failed to load info', err);
+        this.logger.error('Failed to load info', err.message);
         this.importantInfo = null;
       }
     });
