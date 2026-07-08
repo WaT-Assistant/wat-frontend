@@ -5,6 +5,7 @@ import { Auth, LoginPayload } from '../../../core/services/auth';
 import { LoginFormData } from '../models/auth';
 import {IconComponent} from '../../../shared/components/icons/icon.component';
 import { finalize } from 'rxjs';
+import { LoggerService } from '../../../core/services/logger.service';
 
 @Component({
   selector: 'app-loginpage',
@@ -15,6 +16,7 @@ import { finalize } from 'rxjs';
 export class LoginPageComponent {
   private authService = inject(Auth);
   private router = inject(Router);
+  private logger = inject(LoggerService);
   private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
 
@@ -54,7 +56,7 @@ export class LoginPageComponent {
     }))
     .subscribe({
       next: (response) => {
-        console.log('Login successful:', response);
+        this.logger.log('Login successful:', response);
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
         this.router.navigate([returnUrl]);
       },
@@ -74,7 +76,7 @@ export class LoginPageComponent {
           this.errorMessage = 'Server error. Please try again later.';
         }
 
-        console.error('Login failed:', err);
+        this.logger.error('Login failed:', err.message);
       }
     });
   }

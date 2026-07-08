@@ -9,6 +9,7 @@ import { EditNoteModalComponent } from './modals/edit-note-modal/edit-note-modal
 import { NoteService } from '../../../core/services/note';
 import { Note } from '../../../core/services/note';
 import { IconComponent } from "../../../shared/components/icons/icon.component";
+import { LoggerService } from '../../../core/services/logger.service';
 
 @Component({
   selector: 'app-note-board',
@@ -22,7 +23,8 @@ export class NoteBoard implements OnInit{
   private noteService = inject(NoteService);
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
-  
+  private logger = inject(LoggerService);
+
   noteIdToDelete = signal<string | null>(null);
 
   noteForm!: FormGroup;
@@ -82,7 +84,7 @@ export class NoteBoard implements OnInit{
         // Refresh the board
         this.refreshNotes.next();
       },
-      error: (err) => console.error('Error creating note:', err)
+      error: (err) => this.logger.error('Error creating note:', err.message)
     });
   }
 
@@ -100,7 +102,7 @@ export class NoteBoard implements OnInit{
         this.noteIdToDelete.set(null);
         this.refreshNotes.next();
       },
-      error: (err) => console.error('Error deleting note:', err)
+      error: (err) => this.logger.error('Error deleting note:', err.message)
     });
   }
 
@@ -111,7 +113,7 @@ export class NoteBoard implements OnInit{
       text: note.text,
       colorHex: note.colorHex
     });
-    console.log('Edit clicked for note:', note.id);
+    this.logger.log('Edit clicked for note:', note.id);
   }
 
   saveEditedNote() {
@@ -128,7 +130,7 @@ export class NoteBoard implements OnInit{
         this.closeEditNoteModal();
         this.refreshNotes.next();
       },
-      error: (err) => console.error('Error updating note:', err)
+      error: (err) => this.logger.error('Error updating note:', err.message)
     });
   }
 

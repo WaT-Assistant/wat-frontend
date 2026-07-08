@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, inject, ChangeDetectorRef } from '@angular/core';
 import { PublicOfferCard } from './components/public-offer-card/public-offer-card';
 import { JobOfferService } from '../../core/services/joboffer';
+import {LoggerService} from '../../core/services/logger.service';
 
 export interface PublicOffer{
   id: string;
@@ -26,6 +27,7 @@ export interface PublicOffer{
 export class PublicOffersPage implements OnInit, AfterViewInit {
   private offerService = inject(JobOfferService);
   private cdr = inject(ChangeDetectorRef);
+  private logger = inject(LoggerService);
   private observer?: IntersectionObserver;
 
   publicOffers: PublicOffer[] = [];
@@ -72,7 +74,7 @@ export class PublicOffersPage implements OnInit, AfterViewInit {
 
       },
       error: (err) => {
-        console.error('Error loading offers', err);
+        this.logger.error('Error loading offers', err.message);
         this.isLoading = false;
         this.cdr.detectChanges();
       }

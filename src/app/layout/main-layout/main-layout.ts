@@ -4,6 +4,7 @@ import { SidebarComponent } from '../sidebar/sidebar';
 import { Auth } from '../../core/services/auth';
 import { AsyncPipe } from '@angular/common';
 import { IconComponent } from '../../shared/components/icons/icon.component';
+import { LoggerService } from '../../core/services/logger.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -18,6 +19,7 @@ export class MainLayout {
 
   private authService = inject(Auth);
   private router = inject(Router);
+  private logger = inject(LoggerService);
 
   // Expose the observable to the HTML template
   isLoggedIn$ = this.authService.isLoggedIn$;
@@ -44,7 +46,7 @@ export class MainLayout {
       }
     },
     error: (err) => {
-      console.error('Error on sign out', err);
+      this.logger.error('Error on sign out', err.message);
     }
   }); 
   }

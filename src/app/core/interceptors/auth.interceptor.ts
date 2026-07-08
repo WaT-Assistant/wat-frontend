@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError, switchMap, BehaviorSubject, filter, take } from 'rxjs';
 import { Auth } from '../services/auth';
+import { LoggerService } from '../services/logger.service';
 
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<boolean>(false);
@@ -10,7 +11,7 @@ const refreshTokenSubject = new BehaviorSubject<boolean>(false);
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const auth = inject(Auth);
-
+  const logger = inject(LoggerService);
   const authReq = req.clone({
     withCredentials: true,
     setHeaders: {
@@ -26,7 +27,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           isRefreshing = true;
           refreshTokenSubject.next(false);
 
-          console.warn('Access token expired, attempting to refresh...');
+          logger.warn('Access token expired, attempting to refresh...');
 
           return auth.refreshToken().pipe(
             switchMap(() => {
@@ -38,7 +39,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               isRefreshing = false;
               refreshTokenSubject.next(false);
               
-              console.error('Refresh token expired or invalid');
+              logger.error('Refresh token expired or invalid');
               auth.clearAuthState();
 
               const currentUrl = router.routerState.snapshot.url;

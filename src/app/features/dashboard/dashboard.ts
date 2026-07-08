@@ -11,6 +11,7 @@ import { DeleteOfferModalComponent } from './modals/delete-offer-modal/delete-of
 import { PublishOfferModalComponent, type PublishOfferPayload } from './modals/publish-offer-modal/publish-offer-modal';
 import { ToastComponent } from '../../shared/components/toast/toast.component';
 import { ToastService } from '../../core/services/toast.service';
+import {LoggerService} from '../../core/services/logger.service';
 import type { MyOffer } from './dashboard-models';
 
 export type { ImportantInfo, MyOffer } from './dashboard-models';
@@ -23,6 +24,7 @@ export type { ImportantInfo, MyOffer } from './dashboard-models';
 })
 export class DashboardComponent implements OnInit {
   private jobOfferService = inject(JobOfferService);
+  private logger = inject(LoggerService);
   private refreshOffers = new BehaviorSubject<void>(undefined);
   myOffers$ = this.refreshOffers.pipe(
     switchMap(() => this.jobOfferService.getUserOffers()),
@@ -98,13 +100,13 @@ confirmDelete() {
 
   this.jobOfferService.deleteOffer(this.offerIdToDelete).subscribe({
     next: () => {
-      console.log('Job offer successfully deleted.');
+      this.logger.log('Job offer successfully deleted.');
       this.refreshOffers.next(); 
       this.closeDeleteModal(); 
       this.cdr.markForCheck();
     },
     error: (err) => {
-      console.error('Failed to delete the offer:', err);
+      this.logger.error('Failed to delete the offer:', err.message);
       this.closeDeleteModal();
     }
   });
@@ -145,8 +147,13 @@ confirmDelete() {
         this.refreshOffers.next(); 
       },
       error: (err) => {
-        console.error('Failed to update offer:', err);
-        this.errorMessage = 'An error occurred while updating the offer.';
+        this.logger.error('Failed to update offer:', err.message);
+        if (err.error?.errors) {
+          const firstErrorKey = Object.keys(err.error.errors)[0];
+          this.errorMessage = err.error.errors[firstErrorKey][0];
+        } else {
+          this.errorMessage = 'Something went wrong on the server.';
+        }
         this.cdr.markForCheck();
       }
     });
@@ -197,12 +204,12 @@ confirmPublish(payload: PublishOfferPayload) {
     })
   ).subscribe({
     next: () => {
-      console.log('Job offer successfully published.');
+      this.logger.log('Job offer successfully published.');
       this.refreshOffers.next();
       this.closePublishModal();
     },
     error: (err) => {
-      console.error('Failed to publish the offer:', err);
+      this.logger.error('Failed to publish the offer:', err.message);
       this.closePublishModal();
     }
   });
@@ -211,7 +218,7 @@ confirmPublish(payload: PublishOfferPayload) {
 onUnpublish(offer: MyOffer) {
   this.jobOfferService.unpublishOffer(offer.id).subscribe({
     next: () => {
-      console.log('Job offer successfully unpublished.');
+      this.logger.log('Job offer successfully unpublished.');
       this.refreshOffers.next();
       this.cdr.markForCheck();
 
@@ -222,7 +229,7 @@ onUnpublish(offer: MyOffer) {
       );
     },
     error: (err) => {
-      console.error('Failed to unpublish the offer:', err);
+      this.logger.error('Failed to unpublish the offer:', err.message);
     }
   });
 }
@@ -241,11 +248,11 @@ private republish(offer: MyOffer) {
     })
   ).subscribe({
     next: () => {
-      console.log('Job offer successfully republished.');
+      this.logger.log('Job offer successfully republished.');
       this.refreshOffers.next();
     },
     error: (err) => {
-      console.error('Failed to republish the offer:', err);
+      this.logger.error('Failed to republish the offer:', err.message);
     }
   });
 }
