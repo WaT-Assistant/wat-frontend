@@ -1,0 +1,23 @@
+<div class="max-w-7xl mx-auto p-5">
+  <h2 class="text-2xl font-bold mb-6 text-gray-900">Listing of public offers</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    @for (offer of publicOffers; track offer.id) {
+      <app-public-offer-card [offer]="offer"></app-public-offer-card>
+    }
+  </div>
+
+  <div #scrollAnchor class="text-center mt-8 text-gray-500 pb-8">
+    @if (isLoading) {
+      <p>Loading offers...</p>
+    } 
+    
+    @if (!hasMoreOffers && publicOffers.length > 0) {
+      <p>You viewed all available offers at the moment.</p>
+    }
+    
+    @if (!hasMoreOffers && publicOffers.length === 0) {
+      <p>No published offers right now.</p>
+    }
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="min-h-screen flex flex-col bg-white text-gray-900">
+  
+  <!-- Header -->
+  <header class="border-b border-gray-200 px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between sticky top-0 bg-white/90 backdrop-blur-sm z-40">
+  <div class="flex items-center gap-2 sm:gap-4 min-w-0">
+    <button (click)="toggleSidebar()" class="p-1 sm:p-2 flex-shrink-0 hover:bg-gray-100 rounded-md transition-colors focus:outline-none">
+      <app-icon name="sidebar"></app-icon>
+    </button>
+    <button routerLink="/" class="font-heading text-base sm:text-xl tracking-tight truncate">
+      Work & Travel Board
+    </button>
+  </div>
+  
+  <div class="flex items-center gap-3 sm:gap-4 flex-shrink-0">
+    @if(!isAuthPage) {
+      @if (isLoggedIn$ | async) {
+        <button 
+          (click)="onLogout()" 
+          class="whitespace-nowrap text-xs sm:text-sm font-medium bg-black text-white px-3 py-2 sm:px-5 sm:py-2.5 rounded-xl hover:bg-gray-800 transition-colors shadow-sm">
+          Sign out
+        </button>
+      } @else {
+        <a routerLink="/login" class="whitespace-nowrap text-xs sm:text-sm font-medium text-gray-700 hover:text-black transition-colors">
+          Sign in
+        </a>
+        <a routerLink="/register" class="whitespace-nowrap text-xs sm:text-sm font-medium bg-black text-white px-3 py-2 sm:px-5 sm:py-2.5 rounded-xl hover:bg-gray-800 transition-colors shadow-sm">
+          Register
+        </a>
+      }
+    }
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <main class="flex-grow relative">
+    <div class="w-full h-full">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <!-- Sidebar Overlay (Dark background) -->
+    <app-sidebar [isOpen]="isSidebarOpen" (close)="toggleSidebar()"></app-sidebar>
+
+</div>

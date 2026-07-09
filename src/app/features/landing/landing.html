@@ -1,0 +1,133 @@
+<div class="flex flex-col gap-16 pb-16">
+  
+  <!-- Hero Section -->
+  <section class="pt-20 px-6 text-center max-w-4xl mx-auto">
+    <h1 class="text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">
+      Work & Travel Board for Students
+    </h1>
+    <p class="text-xl text-gray-600 mb-10 leading-relaxed">
+      Your ultimate Work & Travel hub. Ditch the paperwork chaos, find verified job offers, and explore opportunities across the US — all in one place.
+    </p>
+  </section>
+
+  <!-- Feature blocks -->
+  <section class="relative w-full bg-[#1a1a1a] overflow-hidden">
+  
+  <div class="absolute inset-0 bg-grid-dark-pattern"></div>
+
+  <div class="max-w-6xl mx-auto px-6 py-24 md:py-32 relative z-10 flex flex-col md:flex-row items-center gap-16 md:gap-24">
+    <div class="flex-1 text-left">
+      <h2 class="text-white text-4xl md:text-5xl font-bold mb-4 tracking-tight">
+        Verified Offers Database
+      </h2>
+      <p class="text-gray-400 text-lg mb-8 leading-relaxed max-w-md">
+        Stop guessing. Browse a curated list of job offers from previous program participants. See real salaries and housing conditions.
+      </p>
+      <button routerLink="/public-offers" class="bg-white text-black px-6 py-2.5 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+        Explore Offers
+      </button>
+    </div>
+
+    <div class="flex-1 w-full">
+      <div class="w-full aspect-[4/3] rounded-2xl relative overflow-hidden group border border-white/10">
+        <img 
+          src="img/verified_db.webp" 
+          alt="Database of verified job offers" 
+          class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="w-full bg-white">
+  <div class="max-w-6xl mx-auto px-6 py-24 md:py-32 flex flex-col-reverse md:flex-row items-center gap-16 md:gap-24">
+    
+    <div class="flex-1 w-full">
+  <div class="w-full aspect-[4/3] rounded-2xl relative overflow-hidden shadow-xl group">
+    <img 
+      src="/img/dashboard.avif" 
+      alt="Modern office with a view of the city" 
+      class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+    />
+  </div>
+</div>
+
+    <div class="flex-1 text-left">
+      <h2 class="text-black text-4xl md:text-5xl font-bold mb-4 tracking-tight">
+        Your Personal Dashboard
+      </h2>
+      <p class="text-gray-600 text-lg mb-8 leading-relaxed max-w-md">
+        Keep all your Work & Travel documents in check. Track your J-1 visa status, save favorite job offers, and organize your summer itinerary.
+      </p>
+      <button routerLink="/dashboard" class="bg-black text-white px-6 py-2.5 rounded-lg font-medium hover:bg-gray-800 transition-colors shadow-sm">
+        Go to Dashboard
+      </button>
+    </div>
+  </div>
+</section>
+
+  <!-- Interactive Map Section (Hidden until ready) -->
+  @if (false) {
+    <section class="bg-pink-50 py-16 px-6">
+      <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-10">
+        <div class="flex-1 text-center md:text-left">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Discover Offers on the Map
+          </h2>
+          <p class="text-gray-700 text-lg mb-8">
+            Why guess where to go? Visualize your summer. Browse an interactive map to see where verified employers are located and where other students are heading.
+          </p>
+          <button disabled class="bg-black text-white px-8 py-3 rounded-md font-semibold opacity-50 cursor-not-allowed transition-none">
+            Explore Map (Coming Soon)
+          </button>
+        </div>
+        
+        <!-- Map UI Placeholder -->
+        <div class="flex-1 w-full h-72 bg-pink-200/50 rounded-2xl border-2 border-dashed border-pink-300 flex items-center justify-center shadow-inner">
+          <span class="text-pink-400 font-medium tracking-widest uppercase">
+            Map Integration UI
+          </span>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- Features Features -->
+  <section class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-12 text-center md:text-left">
+    <div>
+      <h3 class="text-xl font-bold text-gray-900 mb-3">Organise Your Trip</h3>
+      <p class="text-gray-600 leading-relaxed border-t border-gray-800 pt-4">
+        Plan your journey with ease. Access all the information you need to make the most of your  experience.
+      </p>
+    </div>
+    <div>
+      <h3 class="text-xl font-bold text-gray-900 mb-3">Real Reviews and Offers</h3>
+      <p class="text-gray-600 leading-relaxed border-t border-gray-800 pt-4">
+        Browse the database of verified job opportunities from other program participants. Learn about real working conditions and salaries.
+      </p>
+    </div>
+    <div>
+      <h3 class="text-xl font-bold text-gray-900 mb-3">Adaptation in the US</h3>
+      <p class="text-gray-600 leading-relaxed border-t border-gray-800 pt-4">
+        Explore other students' experiences who share tips and advice from their time in the US.
+      </p>
+    </div>
+  </section>
+
+</div>
+
+<footer class="bg-black text-gray-400 py-8 border-t border-gray-800 mt-24">
+  <div class="max-w-7xl mx-auto px-6 mt-4 flex flex-col md:flex-row justify-between items-center gap-6">
+
+    <div class="text-center md:text-left">
+      <span class="font-heading text-xl font-bold text-white tracking-tight">W&T Board</span>
+      <p class="text-sm mt-1">Work & Travel web resource for students</p>
+    </div>
+
+  </div>
+
+  <div class="max-w-7xl mx-auto mb-4 px-6 text-xs flex flex-col md:flex-row justify-between items-center">
+    <p>© 2026 W&T Board. All rights reserved.</p>
+  </div>
+</footer>

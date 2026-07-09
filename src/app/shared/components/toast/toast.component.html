@@ -1,0 +1,25 @@
+@if (toast$ | async; as toast) {
+      @if (toast.isVisible) {
+        <div class="fixed bottom-6 right-6 z-50 animate-fade-in-up">
+          <div class="bg-white text-gray-900 px-4 py-3 rounded-xl shadow-lg border border-gray-200 flex items-center gap-4 min-w-[300px] justify-between">
+            
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center">
+                <app-icon name="check" class="w-5 h-5 text-green-600"></app-icon>
+              </div>
+              <div>
+                <p class="text-sm font-medium">{{ toast.message }}</p>
+                <p class="text-xs text-gray-500">{{ toast.subMessage }}</p>
+              </div>
+            </div>
+
+            <button 
+              (click)="onAction()" 
+              class="text-sm font-bold text-blue-600 hover:text-blue-800 px-2 py-1 transition-colors uppercase tracking-wide">
+              {{ toast.actionLabel }}
+            </button>
+            
+          </div>
+        </div>
+      }
+    }
