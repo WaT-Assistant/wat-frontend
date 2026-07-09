@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://realdomain.com/api'
+  apiUrl: 'https://wat-backend-f9es.onrender.com/api'
 };
